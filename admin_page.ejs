@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Bootstrap Example</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="/stylesheets/admin_page.css">
+</head>
+
+<body>
+    <div class="options_box">
+        <button class="logout" onclick="window.location.href = 'admin_logout'" style="margin-right:20px">Logout</button>
+    </div>
+    <div class="container" style="margin-top:50px;">
+        <ul class="nav nav-tabs">
+            <li class="active"><a data-toggle="tab" href="#home">Add Organiser</a></li>
+            <li><a data-toggle="tab" href="#menu1">Get all events</a></li>
+            <!-- <li><a data-toggle="tab" href="#menu2">Organiser login</a></li> -->
+            <!-- <li><a data-toggle="tab" href="#menu3"></a></li> -->
+        </ul>
+
+        <div class="tab-content">
+            <div id="home" class="tab-pane fade in active">
+                <!-- <div id="popup1" class="overlay">
+            <div class="popup">
+                <div class="content">
+                    <h1 style="text-align: center;"></h1>
+                </div>
+            </div>
+        </div> -->
+
+                <div class="container" style="border: 1px solid #efefef; padding: 50px;">
+                    <div class="col-lg-12 holder" style="padding: 0;">
+                        <h2 class="text-center" style="margin-bottom: 20px;">Add Organiser</h2>
+                        <form id="user_form" class="wrapper animated fadeIn" method="POST"
+                            onsubmit="return validateProfileForm();" autocomplete="off">
+
+                            <div class="form-group">
+                                <input type="text" name="fullname" id="fullname" placeholder="Organiser Name"
+                                    required />
+                            </div>
+
+                            <div class="form-group">
+                                <input type="email" rows="10" name="email" id="email" placeholder="Email"
+                                    required></input>
+                                <p class="error_email" style="color: red; margin: 0;"></p>
+                            </div>
+                            <button id="submit">Add</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div id="menu1" class="tab-pane fade">
+                <div class="row">
+                    <table style="font-weight: 500; font-size: 18px;" class="table table-bordered table-hover table-responsive">
+                        <thead>
+                            <tr>
+                                <th>Email</th>
+                                <th>Guest Id</th>
+                                <th>Name</th>
+                                <th>Stream Id</th>
+                                <th>Stream Name</th>
+                                <th>Stream Name 2</th>
+                                <th>User ID</th>
+                                <th>Delete</th>
+                                <th>Broadcast</th>
+                                <th>Green Screen Broadcast</th>
+                            </tr>
+                        </thead>
+                        <tbody id="all_events">
+        
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+            <div id="menu2" class="tab-pane fade">
+
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function(){
+            get_all_organiser();
+        })
+        $("#user_form").submit(function (e) {
+            e.preventDefault();
+           
+        });
+
+        function validateProfileForm() {
+            var formdata = new FormData();
+            var name, email;
+            name = $('#fullname').val();
+            email = $('#email').val();
+            console.log(name + ": " + email);
+
+            formdata.append("name", name);
+            formdata.append("email", email);
+            $.ajax({
+                url: 'add_organiser',
+                data: formdata,
+                contentType: false,
+                processData: false,
+                type: 'POST',
+                beforeSend: function () {
+                    console.log("before sending....");
+                },
+                success: function (data) {
+                    console.log(data);
+                    if(data.status){
+                        alert(data.success);
+                        get_all_organiser();
+                    }else{
+                        alert(data.error)
+                    }
+                }
+            })
+        }
+    
+        function get_all_organiser(){
+            $.ajax({
+                url: 'all_organiser',
+                type: 'GET',
+                beforeSend: function () {
+                    console.log("before sending....");
+                },
+                success: function (data) {
+                    console.log(data);
+                    var buffer = "";
+                    for (var i = 0; i < data.data.length; i++) {
+                        // console.log(data.data[i]);
+                        buffer += `
+                        <tr>
+                        <td>${data.data[i].email}</td>
+                        <td>${data.data[i].guest_id}</td>
+                        <td>${data.data[i].name}</td>
+                        <td>${data.data[i].stream_id}</td>
+                        <td>${data.data[i].stream_name}</td>
+                        <td>${data.data[i].stream_name_2}</td>
+                        <td>${data.data[i].user_id}</td>
+                        <td><button class="btn btn-default" onclick="delete_by_user_id('${data.data[i].user_id}')">Delete</button></td>
+                        <td><button class="btn btn-default" onclick="broadcast('${data.data[i].user_id}')">BroadCast</button></td>
+                        <td><button class="btn btn-default" onclick="green_screen_broadcast('${data.data[i].stream_name_2}')">Green Broadcast</button></td>
+                        </tr>
+                        `;
+
+                    }
+
+                    $('#all_events').html(buffer);
+                    // if(data.status){
+                    //     alert("Good");
+                    // }else{
+                    //     alert("bad")
+                    // }
+                }
+            })
+        };
+
+        function broadcast(user_id) {
+            console.log(user_id);
+            window.location.href  = 'broadcast?user_id='+user_id;
+        };
+        function green_screen_broadcast(stream_name_2) {
+            console.log(stream_name_2);
+            window.location.href  = 'broadcast_2?stream_name_2='+stream_name_2;
+        };
+function delete_by_user_id(user_id){
+    console.log(user_id);
+    $.ajax({
+        url : 'delete_by_user_id',
+        data : {user_id : user_id},
+        type : 'POST',
+        success : function(data){
+            console.log(data);
+            if(data.status){
+                alert(data.success)
+                get_all_organiser();
+            }else{
+                alert(data.error);
+            }
+        },
+        error : function(error){
+            console.log("error working...");
+            console.log(error);
+        }
+    })
+}
+        
+    </script>
+</body>
+
+</html>

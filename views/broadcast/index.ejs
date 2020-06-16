@@ -1,0 +1,745 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+
+
+  <script>
+    //Replace this variable with your token
+    const PUBLISH_TOKEN = "51c9264ae049fc2fbb2924e9903faa50d318b38bb94727684d39a35047747237";
+    let url; //Websocket URL path.
+    let jwt; //Authenticated API token.
+    let iceServers;
+    const turnUrl = 'https://turn.millicast.com/webrtc/_turn';
+    var xhr = new XMLHttpRequest();
+
+    xhr.open("POST", "https://director.millicast.com/api/director/publish", true);
+    xhr.setRequestHeader("Authorization", `Bearer ${PUBLISH_TOKEN}`);
+    xhr.setRequestHeader("Content-Type", "application/json");
+
+    xhr.onreadystatechange = function () {
+      if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+        var jsonData = JSON.parse(xhr.responseText);
+        console.log("Call Complete:", JSON.stringify(jsonData, null, 2));
+        url = jsonData.data.urls[0];
+        jwt = jsonData.data.jwt;
+        connect();
+
+      }
+    }
+
+    //Replace "streamName" with the valid name you want to broadcast with.
+    xhr.send(JSON.stringify({ streamName: "nitin" }));
+
+
+
+
+    // Create a peer connection to Millicast with WebRTC
+    function connect() {
+      console.log('connecting');
+      //create Peer connection object, add TURN servers for fallback.
+      let conf = {
+        iceServers: iceServers,
+        rtcpMuxPolicy: "require",
+        bundlePolicy: "max-bundle"
+      };
+      let pc = new RTCPeerConnection(conf);
+      //add media to connection
+      stream.getTracks()
+        .forEach(track => {
+          console.log('audio track: ', track);
+          pc.addTrack(track, stream)
+        });
+
+      //connect with Websockets for handshake to media server.
+      let ws = new WebSocket(url + "?token=" + jwt);
+      ws.onopen = function () {
+        //create a WebRTC offer to send to the media server
+        let offer = pc.createOffer({
+          offerToReceiveAudio: true,
+          offerToReceiveVideo: true
+        }).then(desc => {
+          console.log('createOffer Success!');
+          pc.setLocalDescription(desc)
+            .then(() => {
+              console.log('setLocalDescription Success!');
+            })
+            .catch(e => {
+              console.log('setLocalDescription failed: ', e);
+            })
+        }).catch(e => {
+          console.log('createOffer Failed: ', e)
+        });
+
+      }
+    }
+
+  </script>
+</body>
+
+</html> -->
+
+
+
+
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Ink In Caps</title>
+  <meta charset="utf-8">
+  <meta name="viewport"
+    content="width=device-width initial-scale=1, shrink-to-fit=no, maximum-scale=10.0,user-scalable=1">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css"
+    integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/emojionearea/3.4.1/emojionearea.min.css" rel="stylesheet">
+  <link href="/stylesheets/agenda_updated_new.css" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/emojionearea/3.4.1/emojionearea.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.0/animate.css"
+    integrity="sha256-6Wozb/CzRANFOaGqN+u/uRT7kcffVIQt9OhOuuA6I9o=" crossorigin="anonymous" />
+  <style>
+    * {
+      font-family: 'Open Sans', sans-serif !important;
+    }
+
+    body {
+      background: #fff;
+      text-align: center;
+      margin: 0px;
+      padding: 0px;
+    }
+
+    body,
+    html,
+    button,
+    input,
+    select,
+    textarea {
+      font-family: Helvetica, Verdana, Arial, sans-serif;
+    }
+
+    #vidView {
+      background: #fff;
+      position: relative;
+    }
+
+    #form {
+      display: none;
+    }
+
+    .base-input {
+      padding: 5px;
+      font-size: 12px;
+    }
+
+    video {
+      object-fit: cover;
+      height: 550px;
+      width: 100%;
+      display: flex;
+      left: 0;
+      right: 0;
+      margin: auto;
+      margin-top: 30px;
+    }
+
+    .inline-b {
+      display: inline-block;
+    }
+
+    .mt-10 {
+      margin-top: 10px;
+    }
+
+    .ml-10 {
+      margin-left: 10px;
+    }
+
+    .mr-10 {
+      margin-right: 10px;
+    }
+
+    .controls {
+      padding-top: 10px;
+      font-size: 15px;
+    }
+
+    #publishBtn {
+      padding: 20px 31px;
+      text-transform: uppercase;
+      font-size: 18px;
+      border: none;
+      color: #fff;
+      background-color: #000;
+
+    }
+
+
+    /* Chat Page */
+
+    .chat-container {
+      background: #fff;
+      overflow: hidden;
+      /* position: fixed; */
+      width: 100%;
+
+    }
+
+    .chat-header {
+      /* display:none !important; */
+      background: #eeffee;
+      color: #fff;
+      border-top-left-radius: 5px;
+      border-top-right-radius: 5px;
+      padding: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    /* .chat-main {
+display: grid;
+grid-template-columns: 1fr 3fr;
+} */
+
+    .chat-sidebar {
+      display: none;
+      background: var(--dark-color-b);
+      color: #fff;
+      padding: 20px 20px 60px;
+      overflow-y: scroll;
+    }
+
+    .chat-sidebar h2 {
+      font-size: 20px;
+      background: rgba(0, 0, 0, 0.1);
+      padding: 10px;
+      margin-bottom: 20px;
+    }
+
+    .chat-sidebar h3 {
+      margin-bottom: 15px;
+    }
+
+    .chat-sidebar ul li {
+      padding: 10px 0;
+    }
+
+    .chat-messages {
+      padding: 30px 30px 30px 30px;
+      height: 100vh;
+      overflow-y: scroll;
+      background: #f8f8f8;
+    }
+
+    .chat-messages::-webkit-scrollbar-track {
+      -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+      background-color: #F5F5F5;
+    }
+
+    .chat-messages::-webkit-scrollbar {
+      width: 6px;
+      background-color: #F5F5F5;
+    }
+
+    .chat-messages::-webkit-scrollbar-thumb {
+      background-color: #000000;
+    }
+
+    .chat-messages .message {
+      padding: 10px;
+      margin-bottom: 15px;
+      background-color: #ebebeb;
+      border-radius: 5px;
+    }
+
+    .chat-messages .message .meta {
+      font-size: 15px;
+      font-weight: bold;
+      color: #000;
+      opacity: 0.7;
+      margin-bottom: 7px;
+    }
+
+    .chat-messages .message .meta span {
+      color: #777;
+    }
+
+    .chat-form-container {
+      padding: 20px 30px;
+      background-color: #bcbcbc;
+    }
+
+    .chat-form-container form {
+      /* display: flex; */
+    }
+
+    .chat-form-container input[type='text'] {
+      font-size: 16px;
+      padding: 5px;
+      height: 40px;
+      flex: 1;
+    }
+
+    /* Join Page */
+    .join-container {
+      max-width: 500px;
+      margin: 80px auto;
+      color: #fff;
+    }
+
+    .join-header {
+      text-align: center;
+      padding: 20px;
+      background: var(--dark-color-a);
+      border-top-left-radius: 5px;
+      border-top-right-radius: 5px;
+    }
+
+    .join-main {
+      padding: 30px 40px;
+      background: var(--dark-color-b);
+    }
+
+    .join-main p {
+      margin-bottom: 20px;
+    }
+
+    .join-main .form-control {
+      margin-bottom: 20px;
+    }
+
+    .join-main label {
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .join-main input[type='text'] {
+      font-size: 16px;
+      padding: 5px;
+      height: 40px;
+      width: 100%;
+    }
+
+    .join-main select {
+      font-size: 16px;
+      padding: 5px;
+      height: 40px;
+      width: 100%;
+    }
+
+    .join-main .btn {
+      margin-top: 20px;
+      width: 100%;
+    }
+
+    /* .emojionearea, .emojionearea.form-control{width:200px !important;display:inline-block;}
+.submitBtn{width:100px;display:inline-block} */
+
+    #chat-form {
+      display: flex;
+    }
+
+    .emojionearea,
+    .emojionearea.form-control {
+      width: 350px;
+      height: 40px !important;
+      border-radius: 10px;
+    }
+
+    .emojionearea .emojionearea-editor {
+      line-height: 24px;
+      font-size: 16px;
+      text-align: left;
+    }
+
+    .submitBtn {
+      width: 100px;
+      height: 40px;
+      margin-top: 0px;
+      margin-left: 10px;
+      border-radius: 10px;
+      font-family: 'Open Sans', sans-serif;
+      background: #fff;
+      color: #777
+    }
+
+    .message {
+      font-size: 15px;
+    }
+
+    .meta {
+      text-align: left;
+      color: #777
+    }
+
+    .text {
+      text-align: left;
+      word-break: break-all;
+      color: #777
+    }
+
+
+    .chatButton {
+      position: fixed;
+      width: 40px;
+      height: 30px;
+      bottom: 50%;
+      right: 0;
+      cursor: pointer;
+    }
+
+    .history-tl-container {
+      /* font-family: "Roboto",sans-serif; */
+      width: 100%;
+      margin: auto;
+      display: block;
+      position: relative;
+    }
+
+    .history-tl-container ul.tl {
+      margin: 20px 0;
+      padding: 0;
+      display: inline-block;
+
+    }
+
+    .history-tl-container ul.tl li {
+      list-style: none;
+      margin: auto;
+      /* margin-left:100px; */
+      min-height: 50px;
+      /*background: rgba(255,255,0,0.1);*/
+      border-left: 1px dashed rgba(0, 0, 0, 0.5);
+      ;
+      padding: 0 0 50px 30px;
+      position: relative;
+    }
+
+    .history-tl-container ul.tl li:last-child {
+      border-left: 0;
+    }
+
+    .history-tl-container ul.tl li::before {
+      position: absolute;
+      left: -10px;
+      top: 0px;
+      content: " ";
+      border: 8px solid rgba(0, 0, 0, 0.5);
+      border-radius: 500%;
+      background: #fff;
+      height: 20px;
+      width: 20px;
+      transition: all 500ms ease-in-out;
+
+    }
+
+    .history-tl-container ul.tl li:hover::before {
+      border-color: #258CC7;
+      transition: all 1000ms ease-in-out;
+    }
+
+    ul.tl li .item-title {
+      text-align: left
+    }
+
+    ul.tl li .item-detail {
+      color: rgba(0, 0, 0, 0.5);
+      font-size: 12px;
+      text-align: left
+    }
+
+    ul.tl li .timestamp {
+      color: #8D8D8D;
+      position: absolute;
+      width: 100px;
+      left: -35%;
+      text-align: right;
+      font-size: 12px;
+    }
+
+    .speaker_tab {
+      text-align: left !important;
+      font-weight: 900 !important;
+      margin-left: 50px !important;
+    }
+
+    ol li {
+      margin-bottom: 15px;
+    }
+
+    .liveicon {
+      position: absolute;
+      top: 0;
+      right: 0;
+      background-color: red;
+      padding: 7px 9px;
+      margin: 5px;
+      color: #fff;
+      border-radius: 6px;
+    }
+
+    .displayer{
+      display:flex;padding:10px;
+    }
+    .labeler{margin-top:5px;margin-right:10px;}
+  </style>
+
+</head>
+
+<body>
+  <div class="col-lg-12" style="padding: 0; ">
+
+    <div class="col-lg-2" style="background-color: #f8f8f8; height: 100vh;">
+      <div>
+        <img src="\images\chat_logo.jpg" width="100%">
+      </div>
+      <div>
+        <div id="agenda">
+          <div class="timeline-wrapper">
+            <div class="history-tl-container text-center" style="padding: 0 50px;">
+              <ul class="tl">
+                <li class="tl-item" ng-repeat="item in retailer_history">
+
+                  <div class="item-title">Start from Shire tart from Shiretart from Shiretart from
+                    Shiretart from
+                    Shire</div>
+                  <div class="item-detail">Don't forget the ring</div>
+                </li>
+                <li class="tl-item" ng-repeat="item in retailer_history">
+
+                  <div class="item-title">Kill some Orcs</div>
+                  <div class="item-detail">Don't enter the caves!!</div>
+                </li>
+                <li class="tl-item" ng-repeat="item in retailer_history">
+
+                  <div class="item-title">Throw that goddamn ring in the lava</div>
+                  <div class="item-detail">Also, throw that Gollum too</div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div style="text-align:left; margin-left: 40px;">
+          <h2>Speakers</h2>
+          <ol>
+            <li>John Doe(Keynote)</li>
+            <li>John Doe(Keynote)</li>
+            <li>Jane Doe(Keynote)</li>
+          </ol>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="col-lg-7">
+
+
+      <!-- <div id="vidView">
+        <video muted autoplay  playsinline></video>
+        <div class="liveicon" style="display: none;">LIVE</div>
+      </div>
+    
+      <div class="controls">
+    
+        <div id="form" class="">
+          <input id="tokenTxt" class="base-input" type="hidden" value="2d6b1c0aebbc31bbb1855cbe29a08319e2127fa3e5af48b026789f9bae6b7bc0" placeholder="Token" />
+          <input id="streamTxt" class="base-input ml-10 mr-10" type="hidden" value="" placeholder="Stream Name" />
+          <input id="viewTxt" class="base-input" type="hidden" value="RfTsfz" placeholder="Account Id" />
+        </div>
+    
+        <div>
+          <button id="publishBtn" class="inline-b" style="float: left;">Go live</button>
+          <button id="publishBtn" class="inline-b" style="float: right;" onclick="location.reload()">Stop Streaming</button>
+          <div style="clear: both;"></div>
+        </div>
+      </div> -->
+
+      <div class="div-section">
+        <video id="localVideo" autoplay playsinline muted controls style="height:480px;"></video>
+      </div>
+
+      
+      <div class="div-section">
+        <div>
+          <input type="hidden" id="userAgent" name="userAgent" value="" />
+          <div class="displayer">
+            <div class="labeler"><strong>Stream Name</strong></div>
+            <div><input type="text" id="streamName" size="25" class="form-control" value="<%= stream_name %>" disabled /></div>
+          </div>
+          <div class="displayer">
+            <div class="labeler"><strong>Video Bitrate</strong></div>
+            <div><input type="text" id="videoBitrate" class="form-control" size="10" value="" /></div>
+            <div style="margin:7px;">kbps</div>
+          </div>
+          <div class="displayer">
+            <div class="labeler"><strong>Audio Bitrate</strong></div>
+            <div><input type="text" id="audioBitrate" class="form-control" size="10" value="" /></div>
+            <div style="margin:7px;">kbps</div>
+          </div>
+
+         
+            <div class="displayer"><input type="button" class="btn btn-default"  style="background:#000;color:#fff;text-transform: uppercase;" id="buttonGo" onclick="start()" value="" /></div>
+          
+        </div>
+      </div>
+
+      <div>
+        <span id="sdpDataTag"></span>
+      </div>
+
+    </div>
+
+    <div class="col-lg-3" style="padding: 0;">
+
+      <!-- <div class="chatButton" onclick="chatboxtoggle()">
+        <img src="/images/chaticon.jpg" width="100%" />
+      </div> -->
+
+
+      <div class="chat-container" style="z-index: 100;">
+        <main class="chat-main">
+          <div class="chat-sidebar">
+            <h3><i class="fas fa-comments"></i> Room Name:</h3>
+            <h2 id="room-name"></h2>
+            <h3><i class="fas fa-users"></i> Users</h3>
+            <ul id="users"></ul>
+          </div>
+          <div class="chat-messages">
+
+          </div>
+        </main>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="/javascripts/adapter.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qs/6.9.2/qs.min.js"
+    integrity="sha256-TDxXjkAUay70ae/QJBEpGKkpVslXaHHayklIVglFRT4=" crossorigin="anonymous"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/javascripts/adapter.min.js"></script>
+  <script src="/broadcast/webrtc-publish.js"></script>
+  <script type="text/javascript">
+    document.getElementById("userAgent").value = navigator.userAgent;
+  pageReady();
+</script>
+  <script>  // showing emojis in input field
+    $("#msg").emojioneArea({
+      pickerPosition: "top"
+    });</script>
+
+  <!-- chat js here -->
+  <script>
+    function chatboxtoggle() {
+      $(".chat-container").toggle();
+      // $(".mainscreen").fadeOut(800);
+      // // $(".stream-wrapper").fadeOut(1000);
+      // $(".chat-container").fadeIn(1000);
+    };
+
+
+
+
+    const chatForm = document.getElementById('chat-form');
+    const chatMessages = document.querySelector('.chat-messages');
+    const roomName = document.getElementById('room-name');
+    const userList = document.getElementById('users');
+
+    // Get username and room from URL
+    // const { username, room } = Qs.parse(location.search, {
+    //   ignoreQueryPrefix: true
+    // });
+
+
+    const username = 'John Doe';
+    const room = '<%= stream_name %>';
+
+    console.log("chat2.jschat2.jschat2.jschat2.jschat2.jschat2.jschat2.jschat2.jschat2.js");
+    console.log(username, room);
+    roomName.innerHTML = room;
+
+    // const socket = io();
+    //  const socket = io.connect('http://localhost:3333/');
+    const socket = io.connect('https://vtour.inkincaps.com/');
+
+    // const socket = io.connect('https://webinar-iic-1.herokuapp.com/');
+
+    // Join chatroom
+    socket.emit('joinRoom', { username, room });
+
+    // Get room and users
+    socket.on('roomUsers', ({ room, users }) => {
+      outputRoomName(room);
+      outputUsers(users);
+    });
+
+    // Message from server
+    socket.on('message', message => {
+      console.log(message);
+      outputMessage(message, room);
+
+      // Scroll down
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    });
+
+    // Message submit
+    chatForm.addEventListener('submit', e => {
+      e.preventDefault();
+
+      // Get message text
+      const msg = e.target.elements.msg.value;
+
+      // Emit message to server
+      socket.emit('chatMessage', { msg, room, });
+
+      // Clear input
+      e.target.elements.msg.value = '';
+      $(".emojionearea-editor").html('');
+      e.target.elements.msg.focus();
+    });
+
+    // Output message to DOM
+    function outputMessage(message, room) {
+
+      console.log(message, room)
+      const div = document.createElement('div');
+      div.classList.add('message');
+      div.innerHTML = `<p class="meta">John Doe <span style="float:right">${message.time}</span></p>
+  <p class="text">
+    ${message.text}
+  </p>`;
+      document.querySelector('.chat-messages').appendChild(div);
+    }
+
+    // Add room name to DOM
+    function outputRoomName(room) {
+      // roomName.innerHTML = room;
+    }
+
+    // Add users to DOM
+    function outputUsers(users) {
+      console.log(users)
+      // userList.innerHTML = `
+      //   ${users.map(users => `<li>${users.username}</li>`).join('')}
+      // `;
+      // userList.innerHTML = `<li>${users.username}</li>`
+    }
+    // showing emojis in input field
+    $("#msg").emojioneArea({
+      pickerPosition: "top"
+    });
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,1254 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Ink In Caps</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css"
+    integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous" />
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/emojionearea/3.4.1/emojionearea.min.css" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/emojionearea/3.4.1/emojionearea.min.js"></script>
+  <!-- <link rel="stylesheet" href="css/style.css" /> -->
+  <!-- <link rel="stylesheet" href="/stylesheets/chat2.css"> -->
+  <!-- <script src="/javascripts/stage_video.js"></script> -->
+  <!-- <script src="/javascripts/podium_video.js"></script> -->
+  <style>
+    html {
+      height: 100%;
+    }
+
+    body {
+      background: #e2e1e0;
+      text-align: center;
+      margin: 0px;
+      padding: 0px;
+      overflow: hidden;
+      height: 100%;
+    }
+
+    body,
+    html,
+    button,
+    input,
+    select,
+    textarea {
+      font-family: 'Open Sans', sans-serif;
+    }
+
+    /* #broadcat_video_2 {
+      object-fit: cover;
+      height: 355px;
+      width: 711px;
+    } */
+
+
+
+    /* #container {
+      background-image: url('/images/stage_com_2.png');
+      background-size: cover;
+      ;
+      position: fixed;
+      bottom: 0;
+      top: 0;
+      left: 0;
+      right: 0;
+    }
+
+    .holder {
+      position: absolute;
+      top: 24px;
+      left: 50%;
+      transform: translate(-46%, 0);
+    }
+
+    .podium_video {
+      position: absolute;
+      top: 40%;
+      height: 151px;
+      width: 285px;
+      background-color: #e2e1e0;
+    } */
+    /* chat design */
+
+    #mario-chat {
+
+      width: 350px;
+
+      margin: 30px auto;
+
+      box-shadow: 1px 3px 5px rgba(0, 0, 0, 0.05);
+
+      border-radius: 2px;
+
+      position: fixed;
+      right: 10px;
+      bottom: 40px;
+
+      font-family: 'Raleway';
+
+    }
+
+
+    #chat-window {
+
+      height: 300px;
+
+      overflow: auto;
+
+      background: #f9f9f9;
+
+    }
+
+
+    #output p {
+
+      padding: 14px 0px;
+
+      margin: 0 20px;
+
+      border-bottom: 1px solid #e9e9e9;
+
+      color: #555;
+
+      font-family: 'Raleway';
+
+      word-break: break-all;
+
+    }
+
+
+    #feedback p {
+
+      color: #aaa;
+
+      padding: 14px 0px;
+
+      margin: 0 20px;
+
+      font-family: 'Raleway';
+
+    }
+
+
+    #output strong {
+
+      color: #575ed8;
+
+      font-family: 'Raleway';
+
+    }
+
+
+
+    label {
+
+      box-sizing: border-box;
+
+      display: block;
+
+      padding: 10px 20px;
+
+      font-family: 'Raleway';
+
+    }
+
+
+    input {
+
+      padding: 10px 20px;
+
+      box-sizing: border-box;
+
+      background: #eee;
+
+      border: 0;
+
+      display: block;
+
+      width: 100%;
+
+      background: #fff;
+
+      border-bottom: 1px solid #eee;
+
+      font-family: 'Raleway';
+
+      font-size: 16px;
+
+    }
+
+
+    button {
+
+      background: #575ed8;
+
+      color: #fff;
+
+      font-size: 18px;
+
+      border: 0;
+
+      padding: 12px 0;
+
+      width: 100%;
+
+      border-radius: 0 0 2px 2px;
+
+      font-family: 'Raleway';
+
+    }
+
+    .chatButton {
+      position: fixed;
+      width: 50px;
+      height: 50px;
+      bottom: 10px;
+      right: 10px;
+      cursor: pointer;
+    }
+
+    /* .videoWrapper {
+position: absolute;
+width: 575px;
+height: 265px;
+border: 1px solid black;
+top: 373px;
+left: 805px;
+} */
+
+    .hotspot1 {
+      position: absolute;
+      top: 400px;
+      left: 50px;
+      border: 1px solid #000;
+      background: #000;
+      border-radius: 10px;
+      width: 250px;
+      height: 75px;
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 25px;
+      cursor: pointer;
+    }
+
+    .hotspot2 {
+      position: absolute;
+      top: 400px;
+      left: 700px;
+      border: 1px solid #000;
+      background: #000;
+      border-radius: 10px;
+      width: 250px;
+      height: 75px;
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 25px;
+      cursor: pointer;
+    }
+
+    .hideback {
+      z-index: -2;
+
+    }
+
+    /* 
+chat design here
+*/
+
+
+    @import url('https://fonts.googleapis.com/css?family=Roboto&display=swap');
+
+    :root {
+      --dark-color-a: #667aff;
+      --dark-color-b: #7386ff;
+      --light-color: #e6e9ff;
+      --success-color: #5cb85c;
+      --error-color: #d9534f;
+    }
+
+    /* * {
+box-sizing: border-box;
+margin: 0;
+padding: 0;
+} */
+
+    /* body {
+font-family: 'Roboto', sans-serif;
+font-size: 16px;
+background: var(--light-color);
+margin: 20px;
+} */
+
+    ul {
+      list-style: none;
+    }
+
+    a {
+      text-decoration: none;
+    }
+
+    .btn {
+      cursor: pointer;
+      padding: 5px 15px;
+      background: var(--light-color);
+      color: var(--dark-color-a);
+      border: 0;
+      font-size: 17px;
+      margin: 5px 0;
+    }
+
+    /* Chat Page */
+
+    .chat-container {
+
+      background: #fff;
+      margin: 30px auto;
+      overflow: hidden;
+      position: fixed;
+      width: 500px;
+      right: 10px;
+      bottom: 40px;
+      border-radius: 10px;
+    }
+
+    .chat-header {
+      /* display:none !important; */
+      background: #eeffee;
+      color: #fff;
+      border-top-left-radius: 5px;
+      border-top-right-radius: 5px;
+      padding: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    /* .chat-main {
+display: grid;
+grid-template-columns: 1fr 3fr;
+} */
+
+    .chat-sidebar {
+      display: none;
+      background: var(--dark-color-b);
+      color: #fff;
+      padding: 20px 20px 60px;
+      overflow-y: scroll;
+    }
+
+    .chat-sidebar h2 {
+      font-size: 20px;
+      background: rgba(0, 0, 0, 0.1);
+      padding: 10px;
+      margin-bottom: 20px;
+    }
+
+    .chat-sidebar h3 {
+      margin-bottom: 15px;
+    }
+
+    .chat-sidebar ul li {
+      padding: 10px 0;
+    }
+
+    .chat-messages {
+      padding: 30px 30px 30px 30px;
+      max-height: 290px;
+      overflow-y: scroll;
+      background: #f8f8f8;
+    }
+
+    .chat-messages .message {
+      padding: 10px;
+      margin-bottom: 15px;
+      background-color: #ebebeb;
+      border-radius: 5px;
+    }
+
+    .chat-messages .message .meta {
+      font-size: 15px;
+      font-weight: bold;
+      color: #000;
+      opacity: 0.7;
+      margin-bottom: 7px;
+    }
+
+    .chat-messages .message .meta span {
+      color: #777;
+    }
+
+    .chat-form-container {
+      padding: 20px 30px;
+      background-color: #bcbcbc;
+    }
+
+    .chat-form-container form {
+      /* display: flex; */
+    }
+
+    .chat-form-container input[type='text'] {
+      font-size: 16px;
+      padding: 5px;
+      height: 40px;
+      flex: 1;
+    }
+
+    /* Join Page */
+    .join-container {
+      max-width: 500px;
+      margin: 80px auto;
+      color: #fff;
+    }
+
+    .join-header {
+      text-align: center;
+      padding: 20px;
+      background: var(--dark-color-a);
+      border-top-left-radius: 5px;
+      border-top-right-radius: 5px;
+    }
+
+    .join-main {
+      padding: 30px 40px;
+      background: var(--dark-color-b);
+    }
+
+    .join-main p {
+      margin-bottom: 20px;
+    }
+
+    .join-main .form-control {
+      margin-bottom: 20px;
+    }
+
+    .join-main label {
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .join-main input[type='text'] {
+      font-size: 16px;
+      padding: 5px;
+      height: 40px;
+      width: 100%;
+    }
+
+    .join-main select {
+      font-size: 16px;
+      padding: 5px;
+      height: 40px;
+      width: 100%;
+    }
+
+    .join-main .btn {
+      margin-top: 20px;
+      width: 100%;
+    }
+
+    .cloudimage-inner-box div {
+      opacity: 0;
+    }
+
+    .pngWrapper {
+      position: absolute;
+      width: 500px;
+      height: 200px;
+      /* border: 1px solid red; */
+      top: 511px;
+      left: 925px;
+    }
+
+    @media screen and (max-width:1920px) {
+      .backgroundImageWrapper {
+        width: 1920px !important;
+      }
+
+      .holder {
+        position: absolute;
+        top: 60px;
+        left: 550px;
+        /* border: 1px solid red; */
+        width: 900px;
+        height: 430px;
+      }
+
+      .pngWrapper {
+        position: absolute;
+        width: 500px;
+        height: 200px;
+        /* border: 1px solid red; */
+        top: 511px;
+        left: 925px;
+      }
+
+      .holder video {
+        height: 100% !important;
+        width: 100% !important
+      }
+
+      .podium_video {
+        position: absolute;
+        top: 550px;
+        height: 151px;
+        width: 285px;
+        /* background-color: #e2e1e0; */
+        /* border: 2px solid red; */
+        left: 500px;
+      }
+
+      #p5canvas {
+        position: absolute;
+        top: -305px;
+        left: 40px;
+        transform : scale(0.35) !important;
+      }
+    }
+
+    @media screen and (max-width:1800px) {
+      .backgroundImageWrapper {
+        width: 1800px !important;
+      }
+
+      .holder {
+        position: absolute;
+        top: 60px;
+        left: 520px;
+        /* border: 1px solid red; */
+        width: 850px;
+        height: 400px;
+      }
+
+      .pngWrapper {
+        position: absolute;
+        width: 500px;
+        height: 200px;
+        /* border: 1px solid red; */
+        top: 500px;
+        left: 900px;
+      }
+
+      .holder video {
+        height: 100% !important;
+        width: 100% !important
+      }
+
+      .podium_video {
+        position: absolute;
+        top: 550px;
+        height: 151px;
+        width: 285px;
+        /* background-color: #e2e1e0; */
+        /* border: 2px solid red; */
+        left: 400px;
+      }
+
+      .pngWrapper {
+        position: absolute;
+        width: 500px;
+        height: 200px;
+        /* border: 1px solid red; */
+        top: 450px;
+        left: 870px;
+      }
+
+      #p5canvas {
+        position: absolute;
+        top: -345px;
+        left: 50px;
+      }
+    }
+
+    @media screen and (max-width:1700px) {
+      .backgroundImageWrapper {
+        width: 1700px !important;
+      }
+
+      .holder {
+        position: absolute;
+        top: 50px;
+        left: 485px;
+        /* border: 1px solid red; */
+        width: 800px;
+        height: 400px;
+
+      }
+
+      .pngWrapper {
+        position: absolute;
+        width: 500px;
+        height: 200px;
+        /* border: 1px solid red; */
+        top: 430px;
+        left: 800px;
+      }
+
+      .podium_video {
+        position: absolute;
+        top: 500px;
+        height: 151px;
+        width: 285px;
+        /* background-color: #e2e1e0; */
+        /* border: 2px solid red; */
+        left: 350px;
+      }
+
+      #p5canvas {
+        position: absolute;
+        top: -330px;
+        left: 50px;
+      }
+    }
+
+    @media screen and (max-width:1600px) {
+      .backgroundImageWrapper {
+        width: 1600px !important;
+      }
+
+      .holder {
+        position: absolute;
+        top: 50px;
+        left: 460px;
+        /* border: 1px solid red; */
+        width: 750px;
+        height: 350px;
+
+      }
+
+      .pngWrapper {
+        position: absolute;
+        width: 500px;
+        height: 200px;
+        /* border: 1px solid red; */
+        top: 400px;
+        left: 760px;
+      }
+
+      .podium_video {
+        position: absolute;
+        top: 450px;
+        height: 151px;
+        width: 285px;
+        /* background-color: #e2e1e0; */
+        /* border: 2px solid red; */
+        left: 350px;
+      }
+
+      #p5canvas {
+        position: absolute;
+        top: -310px;
+        left: 45px;
+      }
+    }
+
+
+    @media (max-width: 700px) {
+      .chat-main {
+        display: block;
+      }
+
+      .chat-sidebar {
+        display: none;
+      }
+    }
+
+    /* .emojionearea, .emojionearea.form-control{width:200px !important;display:inline-block;}
+.submitBtn{width:100px;display:inline-block} */
+
+    #chat-form {
+      display: flex;
+    }
+
+    .emojionearea,
+    .emojionearea.form-control {
+      width: 350px;
+      height: 40px !important;
+      border-radius: 10px;
+    }
+
+    .emojionearea .emojionearea-editor {
+      line-height: 24px;
+      font-size: 16px;
+      text-align: left;
+    }
+
+    .submitBtn {
+      width: 100px;
+      height: 40px;
+      margin-top: 0px;
+      margin-left: 10px;
+      border-radius: 10px;
+      font-family: 'Open Sans', sans-serif;
+      background: #fff;
+      color: #777
+    }
+
+    .message {
+      font-size: 15px;
+    }
+
+    .meta {
+      text-align: left;
+      color: #777
+    }
+
+    .text {
+      text-align: left;
+      word-break: break-all;
+      color: #777
+    }
+
+    #backtoagenda {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      z-index: 9;
+      color: #fff;
+      cursor: pointer;
+    }
+
+    /* .message{display:flex;}
+.message .logo{width:20px;height:20px;border:1px solid black;} */
+  </style>
+</head>
+
+<body>
+
+  <!-- Standard shim for WebRTC browser compatibility -->
+  <script src="/javascripts/adapter.min.js"></script>
+
+
+  <div class="wrapper" style="position:relative;">
+    <img class="backgroundImageWrapper" src="images/newstage_optimized.png" />
+  </div>
+
+  <div class="pngWrapper">
+    <!-- <img id="sequencer" src="optimised/0_optimized.png" width="100%" /> -->
+    <div class="cloudimage-360" data-folder="optimised/" data-filename="{index}_optimized.png" data-amount="239"
+      data-bottom-circle="true" data-keys="true" data-autoplay="true" data-speed="200" data-spin-reverse="true"
+      data-drag-speed="200" data-full-screen="true" data-ratio="1" data-bottom-circle-offset="2">
+
+      <!-- <img class="cloudimage-360-prev" src="images/navigation-images/previous.png" width="30px" />
+  <img class="cloudimage-360-next" src="images/navigation-images/next.png" width="30px"  /> -->
+      <!-- <button class="cloudimage-360-prev"></button> -->
+      <!-- <button class="cloudimage-360-next">next</button> -->
+    </div>
+  </div>
+
+
+  <a id="backtoagenda" style=""><i class="fa fa-arrow-left" style="font-size:15px"></i> Back</a>
+  <!-- autoplay = muted autoplay-->
+  <div id="container">
+
+    <div class="holder">
+      <iframe id="broadcat_video_2" width="100%" height="100%" frameborder="0"
+        allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+      <!-- <video muted autoplay playsinline id="broadcat_video_2" width="100%" height="100%" style="object-fit: cover;"></video> -->
+    </div>
+    <!-- <div class="holder">
+      <iframe id="broadcat_video" src="http://localhost:3000/stream_2?user_id=abru0MVY" frameborder="0"
+      allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+      allowfullscreen></iframe>
+    </div> -->
+    <div class="podium_video">
+      <!-- <video muted autoplay playsinline id="broadcat_video_2" width="100%" height="100%"></video> -->
+      <!-- <video muted autoplay playsinline id="broadcat_video_2"></video> -->
+      <!-- <iframe id="broadcat_video" width="100%" height="100%" frameborder="0"
+      allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+      allowfullscreen></iframe> -->
+      <video muted autoplay playsinline id="remoteVideo" width="100%" height="100%"
+        style="object-fit: cover;opacity:0;"></video>
+      <canvas id="p5canvas" width="400px" height="600px" style="transform:scale(0.35)"> </canvas>
+    </div>
+    <div class="chatButton" onclick="chatboxtoggle()">
+      <img src="/images/newchats.png" width="100%" />
+    </div>
+
+    <!-- chat logic start here -->
+    <!-- live chat over here -->
+
+    <div class="chat-container animated fadeIn" style="z-index: 100; display: none;">
+      <!-- <header class="chat-header">
+          
+      </header> -->
+
+      <main class="chat-main">
+        <div class="chat-sidebar">
+          <h3><i class="fas fa-comments"></i> Room Name:</h3>
+          <h2 id="room-name"></h2>
+          <h3><i class="fas fa-users"></i> Users</h3>
+          <ul id="users"></ul>
+        </div>
+        <div class="chat-messages">
+          <!-- <div style="margin-bottom:15px;">Welcome to VideoStream Chat</div> -->
+        </div>
+      </main>
+
+      <div class="chat-form-container">
+        <form id="chat-form">
+          <input id="msg" type="text" placeholder="Enter Message" required autocomplete="off" />
+          <button class="btn submitBtn">Send</button>
+        </form>
+      </div>
+    </div>
+  </div>
+  <!-- live chat over here -->
+  <!-- <div class="chat-container" style="z-index: 100;">
+  <header class="chat-header">
+    <h2><i class="fas fa-smile"></i> Created by Manish</h2>
+    <a href="chat_logout" class="btn">Leave Room</a>
+  </header>
+  <main class="chat-main">
+    <div class="chat-sidebar">
+      <h3><i class="fas fa-comments"></i> Room Name:</h3>
+      <h2 id="room-name"></h2>
+      <h3><i class="fas fa-users"></i> Users</h3>
+      <ul id="users"></ul>
+    </div>
+    <div class="chat-messages"></div>
+  </main>
+  <div class="chat-form-container">
+    <form id="chat-form">
+      <input id="msg" type="text" placeholder="Enter Message" required autocomplete="off" />
+      <button class="btn"><i class="fas fa-paper-plane"></i> Send</button>
+    </form>
+  </div>
+</div> -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.1/p5.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.1/addons/p5.dom.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.1/addons/p5.sound.min.js"></script>
+  <script type="text/javascript" src="/javascripts/chromejs/seriously.js"></script>
+  <script type="text/javascript" src="/javascripts/chromejs/seriously.chroma.js"></script>
+  <script type="text/javascript" src="/javascripts/chromejs/sketch.js"></script>
+  <script src="https://cdn.scaleflex.it/plugins/js-cloudimage-360-view/2/js-cloudimage-360-view.min.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qs/6.9.2/qs.min.js"
+    integrity="sha256-TDxXjkAUay70ae/QJBEpGKkpVslXaHHayklIVglFRT4=" crossorigin="anonymous"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <!-- <script src="/javascripts/chat2.js"></script> -->
+  <script src="/javascripts/adapter.min.js"></script>
+  <script>  // showing emojis in input field
+    $("#msg").emojioneArea({
+      pickerPosition: "top"
+    });
+    // $('#broadcat_video_2').attr('src', "http://localhost:3333/stream_2?stream_name_2=<%= stream_name %>");
+
+    $('#broadcat_video_2').attr('src', "https://vtour.inkincaps.com/stream_2?stream_name_2=<%= stream_name %>");
+    var getToken = localStorage.getItem('guest_token');
+    $("#backtoagenda").attr('href','/agenda?token='+getToken);
+  </script>
+  <!-- live chat end -->
+
+  <script>
+
+    function chatboxtoggle() {
+      $(".chat-container").toggle();
+      // $(".mainscreen").fadeOut(800);
+      // // $(".stream-wrapper").fadeOut(1000);
+      // $(".chat-container").fadeIn(1000);
+    }
+    /// for chat js overhere
+
+
+    const chatForm = document.getElementById('chat-form');
+    const chatMessages = document.querySelector('.chat-messages');
+    const roomName = document.getElementById('room-name');
+    const userList = document.getElementById('users');
+
+    // Get username and room from URL
+    // const { username, room } = Qs.parse(location.search, {
+    //   ignoreQueryPrefix: true
+    // });
+
+
+    const username = 'John Doe';
+    const room = '<%= stream_name %>';
+
+    console.log("chat2.jschat2.jschat2.jschat2.jschat2.jschat2.jschat2.jschat2.jschat2.js");
+    console.log(username, room);
+    roomName.innerHTML = room;
+
+    // const socket = io();
+    //  const socket = io.connect('http://localhost:3333/');
+    const socket = io.connect('https://vtour.inkincaps.com/');
+
+    // const socket = io.connect('https://webinar-iic-1.herokuapp.com/');
+
+    // Join chatroom
+    socket.emit('joinRoom', { username, room });
+
+    // Get room and users
+    socket.on('roomUsers', ({ room, users }) => {
+      outputRoomName(room);
+      outputUsers(users);
+    });
+
+    // Message from server
+    socket.on('message', message => {
+      console.log(message);
+      outputMessage(message, room);
+
+      // Scroll down
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    });
+
+    // Message submit
+    chatForm.addEventListener('submit', e => {
+      e.preventDefault();
+
+      // Get message text
+      const msg = e.target.elements.msg.value;
+
+      // Emit message to server
+      socket.emit('chatMessage', { msg, room, });
+
+      // Clear input
+      e.target.elements.msg.value = '';
+      $(".emojionearea-editor").html('');
+      e.target.elements.msg.focus();
+    });
+
+    // Output message to DOM
+    function outputMessage(message, room) {
+
+      console.log(message, room)
+      const div = document.createElement('div');
+      div.classList.add('message');
+      div.innerHTML = `<p class="meta">John Doe <span style="float:right">${message.time}</span></p>
+  <p class="text">
+    ${message.text}
+  </p>`;
+      document.querySelector('.chat-messages').appendChild(div);
+    }
+
+    // Add room name to DOM
+    function outputRoomName(room) {
+      // roomName.innerHTML = room;
+    }
+
+    // Add users to DOM
+    function outputUsers(users) {
+      console.log(users)
+      // userList.innerHTML = `
+      //   ${users.map(users => `<li>${users.username}</li>`).join('')}
+      // `;
+      // userList.innerHTML = `<li>${users.username}</li>`
+    }
+    // showing emojis in input field
+    $("#msg").emojioneArea({
+      pickerPosition: "top"
+    });
+  </script>
+
+
+  <script type="text/javascript">
+    window.addEventListener('load', function () {
+      pageReady();
+      start();
+    })
+  </script>
+  <script>
+    const GO_BUTTON_START = "Play";
+    const GO_BUTTON_STOP = "Stop";
+
+    var remoteVideo = null;
+    var peerConnection = null;
+    var peerConnectionConfig = { 'iceServers': [] };
+    var localStream = null;
+    var wsURL = "wss://5eba300cb5631.streamlock.net/webrtc-session.json";
+    var wsConnection = null;
+    var streamInfo = { applicationName: "webrtc", streamName: "<%= stream_name_2 %>", sessionId: "[empty]" };
+    var userData = { param1: "value1" };
+    var repeaterRetryCount = 0;
+    var newAPI = false;
+    var doGetAvailableStreams = false;
+    var exists = false;
+
+    window.RTCPeerConnection = window.RTCPeerConnection || window.mozRTCPeerConnection || window.webkitRTCPeerConnection;
+    window.RTCIceCandidate = window.RTCIceCandidate || window.mozRTCIceCandidate || window.webkitRTCIceCandidate;
+    window.RTCSessionDescription = window.RTCSessionDescription || window.mozRTCSessionDescription || window.webkitRTCSessionDescription;
+
+    function pageReady() {
+      // const urlParams = new URLSearchParams(window.location.search);
+      // streamInfo.streamName=urlParams.get("StreamID");
+
+      streamInfo.streamName = "<%= stream_name_2 %>";
+
+      console.log('WSURL: ' + wsURL);
+
+      console.log('ApplicationName: ' + streamInfo.applicationName);
+
+      console.log('StreamName: ' + streamInfo.streamName);
+
+
+      // console.log('StreamName: '+streamInfo.streamName);
+
+      // document.getElementById("sdpURL").value=wsURL;
+      // document.getElementById("applicationName").value=streamInfo.applicationName;
+      // document.getElementById("streamName").value=streamInfo.streamName;
+
+      // document.getElementById("buttonGo").value=GO_BUTTON_START;
+
+      remoteVideo = document.getElementById('remoteVideo');
+      // remoteVideo.requestFullscreen();
+
+      if (navigator.mediaDevices.getUserMedia) {
+        newAPI = false;
+      }
+
+      console.log("newAPI: " + newAPI);
+    }
+
+    function wsConnect(url) {
+      wsConnection = new WebSocket(url);
+      wsConnection.binaryType = 'arraybuffer';
+
+      wsConnection.onopen = function () {
+        console.log("wsConnection.onopen");
+
+        peerConnection = new RTCPeerConnection(peerConnectionConfig);
+        peerConnection.onicecandidate = gotIceCandidate;
+
+        if (newAPI) {
+          peerConnection.ontrack = gotRemoteTrack;
+        }
+        else {
+          peerConnection.onaddstream = gotRemoteStream;
+        }
+
+        console.log("wsURL: " + wsURL);
+        if (doGetAvailableStreams) {
+          sendPlayGetAvailableStreams();
+        }
+        else {
+          sendPlayGetOffer();
+        }
+      }
+
+      function sendPlayGetOffer() {
+        console.log("sendPlayGetOffer: " + JSON.stringify(streamInfo));
+        wsConnection.send('{"direction":"play", "command":"getOffer", "streamInfo":' + JSON.stringify(streamInfo) + ', "userData":' + JSON.stringify(userData) + '}');
+      }
+
+      function sendPlayGetAvailableStreams() {
+        console.log("sendPlayGetAvailableStreams: " + JSON.stringify(streamInfo));
+        wsConnection.send('{"direction":"play", "command":"getAvailableStreams", "streamInfo":' + JSON.stringify(streamInfo) + ', "userData":' + JSON.stringify(userData) + '}');
+      }
+
+      wsConnection.onmessage = function (evt) {
+        console.log("wsConnection.onmessage: " + evt.data);
+
+        var msgJSON = JSON.parse(evt.data);
+
+        var msgStatus = Number(msgJSON['status']);
+        var msgCommand = msgJSON['command'];
+
+        if (msgStatus == 514) // repeater stream not ready
+        {
+          repeaterRetryCount++;
+          if (repeaterRetryCount < 10) {
+            setTimeout(sendGetOffer, 500);
+          }
+          else {
+            // document.getElementById("sdpDataTag").innerHTML='Live stream repeater timeout: '+streamName;
+            stopPlay();
+          }
+        }
+        else if (msgStatus != 200) {
+          // document.getElementById("sdpDataTag").innerHTML=msgJSON['statusDescription'];
+          stopPlay();
+        }
+        else {
+          // document.getElementById("sdpDataTag").innerHTML="";
+
+          var streamInfoResponse = msgJSON['streamInfo'];
+          if (streamInfoResponse !== undefined) {
+            streamInfo.sessionId = streamInfoResponse.sessionId;
+          }
+
+          var sdpData = msgJSON['sdp'];
+          if (sdpData !== undefined) {
+            console.log('sdp: ' + JSON.stringify(msgJSON['sdp']));
+
+            peerConnection.setRemoteDescription(new RTCSessionDescription(msgJSON.sdp), function () {
+              peerConnection.createAnswer(gotDescription, errorHandler);
+            }, errorHandler);
+          }
+
+          var iceCandidates = msgJSON['iceCandidates'];
+          if (iceCandidates !== undefined) {
+            for (var index in iceCandidates) {
+              console.log('iceCandidates: ' + JSON.stringify(iceCandidates[index]));
+              peerConnection.addIceCandidate(new RTCIceCandidate(iceCandidates[index]));
+            }
+          }
+        }
+
+        if ('sendResponse'.localeCompare(msgCommand) == 0) {
+          if (wsConnection != null)
+            wsConnection.close();
+          wsConnection = null;
+        }
+        // now check for getAvailableResponse command to close the connection 
+        if ('getAvailableStreams'.localeCompare(msgCommand) == 0) {
+          var availableStreams = msgJSON['availableStreams'];
+          if (availableStreams == undefined)
+            stopPlay();
+          else {
+            exists = false;
+            for (i = 0; i < availableStreams.length; i++) {
+              if (streamInfo.streamName.localeCompare(availableStreams[i].streamName) == 0) {
+                exists = true;
+                console.log("//////// stream exists......");
+                break;
+              }
+            }
+            if (!exists) { stopPlay(); }
+          }
+        }
+      }
+
+      wsConnection.onclose = function () {
+        console.log("wsConnection.onclose");
+      }
+
+      wsConnection.onerror = function (evt) {
+        console.log("wsConnection.onerror: " + JSON.stringify(evt));
+
+        // document.getElementById("sdpDataTag").innerHTML='WebSocket connection failed: '+wsURL;
+      }
+    }
+
+    function getAvailableStreams() {
+      doGetAvailableStreams = true;
+      startPlay();
+    }
+
+    function startPlay() {
+      repeaterRetryCount = 0;
+
+      // wsURL = document.getElementById("sdpURL").value;
+      // streamInfo.applicationName = document.getElementById("applicationName").value;
+      // streamInfo.streamName = document.getElementById("streamName").value;
+
+      console.log("startPlay: wsURL:" + wsURL + " streamInfo:" + JSON.stringify(streamInfo));
+
+      wsConnect(wsURL);
+
+      if (!doGetAvailableStreams) {
+        // document.getElementById("buttonGo").value=GO_BUTTON_STOP;
+      }
+    }
+
+    function stopPlay() {
+      if (peerConnection != null)
+        peerConnection.close();
+      peerConnection = null;
+
+      if (wsConnection != null)
+        wsConnection.close();
+      wsConnection = null;
+
+      remoteVideo.src = ""; // this seems like a chrome bug - if set to null it will make HTTP request
+
+      console.log("stopPlay");
+
+      // document.getElementById("buttonGo").value=GO_BUTTON_START;
+    }
+
+    // start button clicked
+    function start() {
+      // doGetAvailableStreams=false;
+
+      // if (peerConnection == null)
+      // 	startPlay();
+      // else
+      // 	stopPlay();
+
+      setInterval(function () {
+        if (peerConnection == null) {
+          doGetAvailableStreams = false;
+        }
+        else {
+          doGetAvailableStreams = true;
+        }
+        startPlay();
+      }, 5000);
+    }
+
+    function gotMessageFromServer(message) {
+      var signal = JSON.parse(message.data);
+      if (signal.sdp) {
+        if (signal.sdp.type == 'offer') {
+          console.log('sdp:offser');
+          console.log(signal.sdp.sdp);
+          peerConnection.setRemoteDescription(new RTCSessionDescription(signal.sdp), function () {
+            peerConnection.createAnswer(gotDescription, errorHandler);
+          }, errorHandler);
+        }
+        else {
+          console.log('sdp:not-offer: ' + signal.sdp.type);
+        }
+
+      }
+      else if (signal.ice) {
+        console.log('ice: ' + JSON.stringify(signal.ice));
+        peerConnection.addIceCandidate(new RTCIceCandidate(signal.ice));
+      }
+    }
+
+    function gotIceCandidate(event) {
+      if (event.candidate != null) {
+      }
+    }
+
+    function gotDescription(description) {
+      console.log('gotDescription');
+      peerConnection.setLocalDescription(description, function () {
+        console.log('sendAnswer');
+
+        wsConnection.send('{"direction":"play", "command":"sendResponse", "streamInfo":' + JSON.stringify(streamInfo) + ', "sdp":' + JSON.stringify(description) + ', "userData":' + JSON.stringify(userData) + '}');
+
+      }, function () { console.log('set description error') });
+    }
+
+    function gotRemoteTrack(event) {
+      console.log('gotRemoteTrack: kind:' + event.track.kind + ' stream:' + event.streams[0]);
+      try {
+        remoteVideo.srcObject = event.streams[0];
+      } catch (error) {
+        remoteVideo.src = window.URL.createObjectURL(event.streams[0]);
+      }
+    }
+
+    function gotRemoteStream(event) {
+      console.log('gotRemoteStream: ' + event.stream);
+      try {
+        remoteVideo.srcObject = event.stream;
+      } catch (error) {
+        remoteVideo.src = window.URL.createObjectURL(event.stream);
+      }
+    }
+
+    function errorHandler(error) {
+      console.log(error);
+    }
+
+
+  </script>
+
+
+
+
+</body>
+
+</html>

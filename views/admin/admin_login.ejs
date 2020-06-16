@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+  <link href="https://fonts.googleapis.com/css?family=Raleway:100,200,300,400,500,700,800&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="/stylesheets/style.css">
+  <link rel="stylesheet" href="/stylesheets/admin_login.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
+  <script src='https://kit.fontawesome.com/a076d05399.js'></script>
+</head>
+
+<body>
+
+<div class="container-fluid">
+
+<div class="col-lg-12">
+
+  <div style="margin-top:150px; display: flex; justify-content: center; align-items: center;">
+
+    <form id="form1">
+
+      <div class="login_msg" style="text-align: center;"></div>
+
+      <div><img style="width: 50px; margin: 20px auto; display: block;" src="/images/logo-only.png" width="100%" height="100%" /></div>
+
+        <div class='col-lg-8 form-mobile'>
+          
+          <div class="form-group">
+            <input type="text" name="username" id="username" placeholder="Username" required>
+          </div>
+  
+          <div class="form-group">
+            <input type="password" name="password" id="password" placeholder="Enter password" required>
+          </div>
+
+          <button type="submit" id="submitbtn">Login</button>
+
+        </div>
+    </form>
+
+  </div>
+
+</div>
+</div>
+
+
+  <script>
+    var usrname;
+    var email, password;
+    var obj = {}
+    $("#form1").on('submit', function (e) {
+      e.preventDefault();
+      email = $("#username").val();
+      password = $("#password").val();
+      // console.log("username : " + email + ", password : " + password);
+      obj.email = email;
+      obj.password = password;
+      $.ajax({
+        type: 'POST',
+        url: '/admin_login',
+        data: obj,
+        success: function (result) {
+          console.log("succceeessss");
+
+          console.log(result)
+          if (result.status) {
+            // console.log(result.response.user.admin)
+            // alert(result.success)
+            $('.login_msg').html(`<h4 style="color:green;">${result.success}</h4>`);
+            $('.login_msg').css({ 'display': 'block' });
+            if (result.status) {
+              // usrname = result.response.user.name;
+              // console.log(usrname);
+              // sessionStorage.setItem("username",usrname);
+              setTimeout(function () {
+                  $(':input').val('');
+                  window.location.href = '/admin_page'
+              }, 1000)
+            }
+            else{
+              // usrname = result.response.user.name;
+              setTimeout(function () {
+                console.log(result);
+                // sessionStorage.setItem("username",usrname);
+                  // $(':input').val('');
+                  $('.login_msg').css({ 'display': 'none' });
+                  // window.location.href = '/all_video'
+              }, 1000)
+            }
+
+
+          } else {
+            $('.login_msg').html(`<h4 style="color:red;">${result.error}</h4>`);
+            $('.login_msg').css({ 'display': 'block' });
+            setTimeout(function () {
+              $('.login_msg').css({ 'display': 'none' });
+            }, 3000)
+          }
+
+        },
+        error: function (error) {
+          console.log(error);
+          console.log("failure")
+          alert("username and password both are incorrect")
+        }
+      })
+    })
+  </script>
+</body>
+
+</html>

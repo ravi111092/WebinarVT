@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agenda</title>
+    <link rel='stylesheet' href='/stylesheets/agenda_updated_new.css' />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.min.js"
+        integrity="sha256-NXRS8qVcmZ3dOv3LziwznUHPegFhPZ1F/4inU7uC8h0=" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/jquery.slick/1.6.0/slick.css" rel="stylesheet">
+    <script src="/javascripts/timer.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.0.0/animate.min.css"/>
+    <!-- slick slider -->
+    <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css" />
+    <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css" />
+    <script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+
+    <style>
+        #unitsDate::after {
+            content: '';
+        }
+    </style>
+</head>
+
+
+<body>
+
+    <div class="container-fluid" style="padding: 0;">
+        <div class="col-lg-12 main-screen" style="padding: 0;">
+
+            <div class="option_box">
+
+                <h3>Welcome!</h3>
+                <div style="height: 100px; width: 100px;  border-radius: 50%; margin-top:50px; margin:0 auto; background-color: #6a6a6a;"> </div>
+                <h3>@Username</h3>
+
+                <div style="margin: 30px;">
+                    <button>Logout</button>
+                </div>   
+            </div>
+
+            <div class="nav_tab">
+                <div class="menu btn15"  style="float:left;">
+                    <div class="icon"></div>
+                </div>
+                <div class="profile_Display"> </div>
+                <div style="clear: both;"> </div>
+            </div>
+
+            <!-- <span class="fa fa-arrow-left back_arrow"
+                style="float: left; margin:20px; cursor:pointer; color: #fff; font-size:32px" aria-hidden="true"
+                onclick="window.location.href='/'"></span> -->
+
+            <div class="logo_holder">
+                <div class="logo"><img src="\images\newimages\iiclogo_white.png" height="100%" width="100%"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid" style="padding: 0; background-color: black;">
+        <div class="col-lg-12" style="padding: 0;">
+
+            <div class="bottom_tab">
+
+                <div class="col-lg-4">
+                    <h3>Event:</h3>
+                    <h1>CEO speech</h1>
+                </div>
+
+                <div class="col-lg-4">
+                    <h3>Hosted By:</h3>
+                    <h1>John Doe</h1>
+                </div>
+
+                <div class="col-lg-4 text-right"> <img src="\images\newimages\iiclogo_white.png"> </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="container-fluid" style="padding: 0;">
+        <div class="col-lg-12" style="padding: 0;">
+
+            <div class="timer">
+                <div class="timer-wrapper">
+
+                    <div class="center">
+
+                        <div class="row" style="padding: 0; margin: 0;">
+                            <div class="unit">
+                                <div id="days"></div>
+                            </div>
+                            <div class="unit">
+                                <div id="hours"></div>
+                            </div>
+                            <div class="unit">
+                                <div id="minutes"></div>
+                            </div>
+                            <div class="unit">
+                                <div id="seconds"></div>
+                            </div>
+
+                            <div id="unitsDate" class="unit">
+                                <p style="font-weight: 300; font-size:15px ;text-transform: uppercase;text-align:left; margin-top:20px">
+                                    Date:</p>
+                                <p style="text-transform: uppercase; font-size:21px;text-align:left">May 12, 2020</p>
+                            </div>
+                            <!-- 
+                            <div style="float:right; text-align:left; margin-right:50px; margin-top:30px">
+                                <p style="font-weight: 300; font-size:15px ;text-transform: uppercase;">Date:</p>
+                                <p style="text-transform: uppercase; font-size:21px">May 12, 2020</p>
+                            </div> -->
+
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    
+    <div class="container-fluid" style="padding: 0; border-bottom: 1px solid #000;">
+        <div class="col-lg-12" style="padding: 0;">
+            <div class="event_tab">
+                <div class="col-lg-6 event_holder" style="margin: 80px 0; padding: 0px 170px;">
+
+                    <h2>About the event:</h2>
+
+                    <div>
+                        <p>Lorem ipsum dolor sit amet, consectetuer adip iscing elit, sed diam nonum my nibh euis mod ti
+                            cidunt ut Iaoreet dolore magna </p>
+                    </div>
+
+                    <div>
+
+                        <!-- <button onclick="gotoauditorium()">
+                            AUDITORIUM &#10230;
+                        </button> -->
+
+                        <button onclick="gotoexhibition()">
+                            EXHIBITION HALL <span class="arrow_right"><i class="fa fa-long-arrow-right" aria-hidden="true"></i></span>
+                        </button>
+
+                        <button onclick="gotoexplorer()">
+                            EXPLORE <span class="arrow_right"><i class="fa fa-long-arrow-right" aria-hidden="true"></i></span>
+                        </button>
+
+                    </div>
+
+                </div>
+
+                <div class="col-lg-6 agenda_holder">
+                    <h2>Summit Agenda:</h2>
+
+                    <div id="agenda" style="min-height:250px; margin-top: 40px;">
+                        <div class="timeline-wrapper">
+                            <div class="history-tl-container text-left">
+                                <ul class="tl">
+                                    <li class="tl-item" ng-repeat="item in retailer_history">
+
+                                        <div class="item-title">Today 10 AM</div>
+                                        <div class="item-detail">Lorem ipsum dolor sit amet, consectetuer adip</div>
+                                    </li>
+                                    <li class="tl-item" ng-repeat="item in retailer_history">
+
+                                        <div class="item-title">Today 11 AM</div>
+                                        <div class="item-detail">Lorem ipsum dolor sit amet, consectetuer adip</div>
+                                    </li>
+                                    <li class="tl-item" ng-repeat="item in retailer_history">
+
+                                        <div class="item-title">Today 12 PM</div>
+                                        <div class="item-detail">Lorem ipsum dolor sit amet, consectetuer adip</div>
+                                    </li>
+                                </ul>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid" style="padding: 0;">
+        <div class="col-lg-12" style="padding: 0;">
+            <div class="attend_tab">
+                <h2>Why Attend?</h2>
+                <ol>
+                    <li>Lorem ipsum dolor sit amet, consectetuer adip iscing</li>
+                    <li>Lorem ipsum dolor sit amet, consectetuer adip iscing elit, sed</li>
+                    <li>Lorem ipsum dolor sit amet, consectetuer adip iscing elit, sed diam nonum my nibh euismod ti
+                        cidunt ut laoreet dolore magna aliquam.</li>
+                    <li>Lorem ipsum dolor sit amet, consectetuer adip iscing elit, sed diam nonum my nibh euismod ti
+                        cidunt ut laoreet dolore magna aliquam.</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid" style="padding: 0;">
+        <div class="col-lg-12" style="padding: 0;">
+
+            <div class="speaker_tab" style="border:1px solid #000; padding: 50px;">
+
+                <div class="col-lg-4">
+                    <div class="profiles">
+                        <img src="\images\newimages\Group 538.png" width="100%">
+                        <p>John Doe</p>
+                        <h4>Lorem ipsum dolor</h4>
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="profiles">
+                        <img src="\images\newimages\Group 537.png" width="100%">
+                        <p>John Doe</p>
+                        <h4>Lorem ipsum dolor</h4>
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="profiles">
+                        <img src="\images\newimages\Group 536.png" width="100%">
+                        <p>Jane Doe</p>
+                        <h4>Lorem ipsum dolor</h4>
+                    </div>
+                </div>
+
+                <div class="col-lg-4" style="margin-top: 20px;">
+                    <div class="profiles">
+                        <img src="\images\newimages\Group 539.png" width="100%">
+                        <p>Jane Doe</p>
+                        <h4>Lorem ipsum dolor</h4>
+                    </div>
+                </div>
+
+                <div class="col-lg-4" style="margin-top: 20px;">
+                    <div class="profiles">
+                        <img src="\images\newimages\Group 540.png" width="100%">
+                        <p>John Doe</p>
+                        <h4>Lorem ipsum dolor</h4>
+                    </div>
+                </div>
+
+                <div class="col-lg-4" style="margin-top: 20px;">
+                    <div class="profiles">
+                        <img src="\images\newimages\Group 541.png" width="100%">
+                        <p>John Doe</p>
+                        <h4>Lorem ipsum dolor</h4>
+                    </div>
+                </div>
+                <div style="clear:both"></div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- for mobile -->
+    <div class="container-fluid mobile_view" style="padding: 0; color:#fff; background: #000;">
+        <div class="col-lg-12" style="padding: 0;">
+            <h4 style="font-weight: 800; font-size:21px; text-transform: uppercase; margin-left: 30px;">Speakers:</h4>
+            <div class="speaker_tab_mobile"> 
+                    <div class="profiles">
+                        <img src="\images\newimages\Group 538.png" width="100%">
+                        <p>John Doe</p>
+                        <p>Lorem ipsum dolor</p>
+                    </div>
+                    <div class="profiles">
+                        <img src="\images\newimages\Group 537.png" width="100%">
+                        <p>John Doe</p>
+                        <p>Lorem ipsum dolor</p>
+                    </div>
+                    <div class="profiles">
+                        <img src="\images\newimages\Group 536.png" width="100%">
+                        <p>Jane Doe</p>
+                        <p>Lorem ipsum dolor</p>
+                    </div>
+                    <div class="profiles">
+                        <img src="\images\newimages\Group 539.png" width="100%">
+                        <p>Jane Doe</p>
+                        <p>Lorem ipsum dolor</p>
+                    </div>
+                    <div class="profiles">
+                        <img src="\images\newimages\Group 540.png" width="100%">
+                        <p>John Doe</p>
+                        <p>Lorem ipsum dolor</p>
+                    </div>
+                    <div class="profiles">
+                        <img src="\images\newimages\Group 541.png" width="100%">
+                        <p>John Doe</p>
+                        <p>Lorem ipsum dolor</p>
+                    </div>
+            </div>
+        </div>
+    </div>
+
+    
+    <div class="container" style="padding: 0;">
+            <div class="col-lg-12" style="padding: 0;">
+
+                <div class="brands_tab">
+    
+                    <div class="brands">
+                        <img src="\images\newimages\Group 345.png">
+                    </div>
+    
+                    <div class="brands">
+                        <img src="\images\newimages\Group 351.png">
+                    </div>
+    
+                    <div class="brands">
+                        <img src="\images\newimages\Group 358.png">
+                    </div>
+    
+    
+                    <div class="brands">
+                        <img src="\images\newimages\Group 368.png">
+                    </div>
+    
+    
+                    <div class="brands">
+                        <img src="\images\newimages\Group 368.png">
+                    </div>
+    
+    
+                    <div class="brands">
+                        <img src="\images\newimages\Group 358.png">
+                    </div>
+    
+                    <div class="brands">
+                        <img src="\images\newimages\Group 345.png">
+                    </div>
+    
+                    <div class="brands">
+                        <img src="\images\newimages\Group 351.png">
+                    </div>
+                </div>
+    
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+        $('.menu').click(function(){
+            $(this).toggleClass('open');
+            $(".option_box").toggleClass("show_option_box");
+        });
+
+        $(document).ready(() => {
+
+            $(".brands_tab").slick({
+                // infinite: true,
+                slidesToShow: 5,
+                slidesToScroll: 1,
+                autoplay: true,
+                autoplaySpeed: 2000,
+                prevArrow: false,
+                nextArrow: false,
+                responsive: [{
+                    breakpoint: 1024,
+                    settings: {
+                        slidesToShow: 2,
+                        slidesToScroll: 1,
+                    }
+                }],
+            })
+
+            if(window.innerWidth <= "1200"){
+                    $(".speaker_tab_mobile").slick({
+                        slidesToShow:3,
+                        slidesToScroll:1,
+                        responsive: [{
+                            breakpoint: 500,
+                            settings: {
+                                slidesToShow: 2,
+                                slidesToScroll: 1,
+                                }
+                        }],
+                    })
+            }
+        })
+        
+
+        var getToken = localStorage.getItem('guest_token')
+
+
+        function gotoauditorium() {
+            window.location.href = '/stream?token=' + getToken;
+        }
+
+        function gotoexhibition() {
+            window.location.href = '/exhibitionhall';
+        }
+
+        function gotoexplorer() {
+            window.location.href = '/explorer?token=' + getToken;
+        }
+    </script>
+
+</body>
+
+</html>

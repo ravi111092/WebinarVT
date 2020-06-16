@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agenda</title>
+    <link rel='stylesheet' href='/stylesheets/agenda.css' />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.min.js"
+        integrity="sha256-NXRS8qVcmZ3dOv3LziwznUHPegFhPZ1F/4inU7uC8h0=" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/jquery.slick/1.6.0/slick.css" rel="stylesheet">
+    <script src="/javascripts/timer.js"></script>
+</head>
+
+<body>
+
+    <!-- modal  -->
+
+    <!-- Modal -->
+    <div id="myModal" class="modal fade" role="dialog">
+        <div class="modal-dialog modal-sm">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Login</h4>
+                </div>
+                <div class="modal-body">
+                    <form id="loginForm" onsubmit="return validateLogin()" method="POST">
+                        <div class="form-element text-center">
+                            <div class="logo-wrapper"></div>
+                        </div>
+                        <div class="form-element">
+                            <input type="text" class="form-control" name="guestid" required />
+                        </div>
+
+                        <div class="form-element text-center" id="loading" style="margin-top: 10px;color:#2196F3">
+
+                        </div>
+
+                        <div class="form-element text-center" id="success" style="margin-top: 10px;color:#81C784">
+
+                        </div>
+
+                        <div class="form-element text-center" id="error" style="margin-top: 10px;color:#d50000">
+
+                        </div>
+
+                        <div class="form-element text-center">
+                            <button type="submit" class="btn submitButton btn-default">LOGIN</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+    <header>
+        <nav class="navbar navbar-inverse">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="#banner">Company Name/Logo</a>
+                </div>
+                <div class="collapse navbar-collapse" id="myNavbar">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a href="#summary">Summary</a></li>
+                        <li><a href="#timer">Time</a></li>
+                        <li><a href="#agenda">Agenda</a></li>
+                        <!-- <li><a href="#form">Registration</a></li> -->
+                        <li><a onclick="logout()">Logout</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <!-- Banner-Images  -->
+
+    <div class="SlickBanner" id="banner">
+        <div class="image-slides">
+            <img src="https://www.w3schools.com/bootstrap/la.jpg" />
+        </div>
+        <div class="image-slides">
+            <img src="https://www.w3schools.com/bootstrap/ny.jpg" />
+        </div>
+        <div class="image-slides">
+            <img src="https://www.w3schools.com/bootstrap/chicago.jpg" />
+        </div>
+    </div>
+
+    <div id="summary" class="container-fluid">
+        <h1 class="title-header text-center">SUMMARY</h1>
+
+        <div class="container summarytext">
+            <p class="text-center">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem
+                Ipsum has been the
+                industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and
+                scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap
+                into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the
+                release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing
+                software like Aldus PageMaker including versions of Lorem Ipsum.</p>
+
+            <p class="text-center">
+                Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the
+                industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and
+                scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap
+                into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the
+                release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing
+                software like Aldus PageMaker including versions of Lorem Ipsum.
+            </p>
+        </div>
+    </div>
+
+    <div class="container">
+        <hr />
+    </div>
+
+    <div id="timer" class="container-fluid" style="min-height:400px;">
+        <h1 class="title-header text-center">COUNTDOWN TO THE SESSION</h1>
+
+        <div class="timer-wrapper">
+            <div class="center">
+
+                <div class="row">
+                    <div class="unit">
+                        <div id="days"></div>
+                        <span>DAYS</span>
+                    </div>
+                    <div class="unit">
+                        <div id="hours"></div>
+                        <span>HOURS</span>
+                    </div>
+                    <div class="unit">
+                        <div id="minutes"></div>
+                        <span>MINUTES</span>
+                    </div>
+                    <div class="unit">
+                        <div id="seconds"></div>
+                        <span>SECONDS</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center">
+            <!-- <button class="btn btn-default" onclick="window.location.href='/lobby'">Launch</button> -->
+            <button><div class="hotspot1 animated pulse infinite" onclick="auditorium_2()">AUDITORIUM</div></button>
+            <button><div class="hotspot2 animated pulse infinite" onclick="exhibitionhall()">EXHIBITION HALL</div></button>
+        </div>
+    </div>
+
+    <div class="container">
+        <hr />
+    </div>
+
+    <div id="agenda" class="container-fluid" style="min-height:400px;">
+        <h1 class="title-header text-center">LISTS OF THE AGENDA</h1>
+
+        <div class="timeline-wrapper">
+            <div class="history-tl-container text-center">
+                <ul class="tl">
+                    <li class="tl-item" ng-repeat="item in retailer_history">
+                        <div class="timestamp">
+                            3rd March 2015<br> 7:00 PM
+                        </div>
+                        <div class="item-title">Start from Shire tart from Shiretart from Shiretart from Shiretart from
+                            Shire</div>
+                        <div class="item-detail">Don't forget the ring</div>
+                    </li>
+                    <li class="tl-item" ng-repeat="item in retailer_history">
+                        <div class="timestamp">
+                            19th March 2015<br> 3:00 PM
+                        </div>
+                        <div class="item-title">Kill some Orcs</div>
+                        <div class="item-detail">Don't enter the caves!!</div>
+                    </li>
+                    <li class="tl-item" ng-repeat="item in retailer_history">
+                        <div class="timestamp">
+                            1st June 2015<br> 7:00 PM
+                        </div>
+                        <div class="item-title">Throw that goddamn ring in the lava</div>
+                        <div class="item-detail">Also, throw that Gollum too</div>
+                    </li>
+
+                </ul>
+
+            </div>
+        </div>
+
+       
+
+    </div>
+
+    <div class="container">
+        <hr />
+    </div>
+
+    <!-- <div id="form" class="container-fluid" style="min-height:400px;">
+        <h1 class="title-header text-center">REGISTRATION FORM</h1>
+    </div> -->
+
+
+
+    <script type="text/javascript">
+        var user_id = '<%= user_id %>';
+        // var live_base_link = 'https://vtour.inkincaps.com/stream?user_id='
+        console.log(user_id);
+        var getItem = sessionStorage.getItem('token');
+        if (!getItem) {
+            window.location.href = '/';
+        }
+
+        $(document).ready(function () {
+            $('.SlickBanner').slick({
+                dots: true,
+                autoplay: true,
+                infinite: true,
+                dots: false,
+                slidesToShow: 1,
+                slideswToScroll: 1,
+                arrows: true,
+                speed: 300,
+                prevArrow: '<img class="leftnavigation" src="/images/left.png" width="40px" />',
+                nextArrow: '<img class="rightnavigation" src="/images/right.png" width="40px" />'
+            });
+
+
+
+            var $root = $('html, body');
+
+            $('a[href^="#"]').click(function () {
+                var href = $.attr(this, 'href');
+
+                $root.animate({
+                    scrollTop: $(href).offset().top
+                }, 800, function () {
+                    window.location.hash = href;
+                });
+
+                return false;
+            });
+
+            $("#loginForm").submit(function (e) {
+                e.preventDefault();
+            });
+        });
+
+        function validateLogin() {
+            console.log("name : " + document.forms["loginForm"]["guestid"].value);
+            var guest_id = document.forms["loginForm"]["guestid"].value;
+            var body = {
+                guest_id: guest_id
+            }
+            $.ajax({
+                // url: 'https://live-stream1.herokuapp.com/guest_login',
+                url: '/guest_login',
+                data: body,
+                type: 'POST',
+                beforeSend: function () {
+                    document.getElementById('loading').innerHTML = 'Please Wait!!';
+                },
+                complete: function () {
+                    document.getElementById('loading').innerHTML = '';
+                },
+                success: function (data, status) {
+                    if (data.status) {
+                        console.log(data)
+                        document.getElementById('success').innerHTML = 'Login Successful !!';
+                        setTimeout(() => {
+                            document.getElementById('success').innerHTML = '';
+                            window.location.href = "/lobby";
+                            sessionStorage.setItem('token', data.response._id);
+                        }, 2000);
+                    } else {
+                        document.getElementById('error').innerHTML = 'Id Did Not Match !!';
+                        setTimeout(() => {
+                            document.getElementById('error').innerHTML = '';
+
+                        }, 2000);
+                    }
+                }
+            })
+
+
+        }
+
+        function logout(){
+            sessionStorage.clear();
+            window.location.href = '/';
+        }
+
+        function auditorium_2(){
+            window.location.href = '/stream?user_id='+user_id
+        }
+    </script>
+
+</body>
+
+</html>

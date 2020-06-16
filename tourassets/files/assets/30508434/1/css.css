@@ -1,0 +1,26 @@
+
+/* .container {
+    position: absolute;
+    width:500px;
+    height:0px;
+    background:grey;
+    display:none;
+   left:0px;top:0px;right:0px;bottom:0px;margin:auto;
+} */
+
+.button{
+    cursor:pointer;
+}
+
+.fade.in{
+    display:block;
+    
+}
+
+.pdfli, .imageli, .videoli, .videocall{cursor:pointer}
+
+.col-sm-3 {padding : 10px !important}
+
+.videomodal{
+    width:80% !important
+}

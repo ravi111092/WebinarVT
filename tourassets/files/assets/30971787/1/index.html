@@ -1,0 +1,111 @@
+
+<html>
+<body>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    <script> 
+    
+        var AjaxCalling = pc.createScript('ajaxCalling');
+
+        // initialize code called once per entity
+        AjaxCalling.prototype.initialize = function() 
+        {
+        /*    $.ajax({
+        // url: 'https://live-stream1.herokuapp.com/guest_login',
+                url: '/guest_login',
+                data: body,
+                type: 'POST',   
+                beforeSend: function () 
+                {
+                document.getElementById('loading').innerHTML = 'Please Wait.';
+                },
+                complete: function () 
+                {
+                document.getElementById('loading').innerHTML = '';
+                },
+                success: function (data, status) 
+                {
+                if (data.status) 
+                    {
+
+                        console.log(data.response.guest_id);
+                        var room = data.response.guest_id;
+                        var username = data.response.username;
+                        localStorage.setItem('guest_token', data.response.guest_token);
+                        var user_id = room; 
+                        data.response.guest_id;
+                        // const socket = io.connect('http://localhost:3333/');
+                        // const socket = io.connect('https://webinar-iic-1.herokuapp.com/');
+
+                        // Join chatroom
+                        // socket.emit('joinRoom', { username, room });
+                        document.getElementById('success').innerHTML = 'Login Successful.';
+                        setTimeout(() => 
+                            {
+                                document.getElementById('success').innerHTML = '';
+                                window.location.href = "/agenda/" + user_id;
+                                // window.location.href = "/agenda_updated";
+                                sessionStorage.setItem('token', data.response._id);
+                            }, 2000);
+                    } 
+                    else 
+                    {
+                    document.getElementById('error').innerHTML = 'ID did not match.';
+                    setTimeout(() => 
+                    {
+                        document.getElementById('error').innerHTML = '';
+
+                    }, 2000);
+                }
+                }
+            })*/
+        };
+
+
+        AjaxCalling.prototype.callOnStart = function(dt) 
+        {
+
+            $.ajax(
+            {
+                url: "v2.inkincaps.com/is_active_session",
+                type: 'POST',  // http method
+                data:   '12345',             //{ myData: 'This is my data.' },  // data to submit
+                success: function (data, status, xhr) 
+                    {
+                            //$('p').append('status: ' + status + ', data: ' + data);
+
+                            console.log("JSON Data : " + data);    
+
+                    },
+                error: function (jqXhr, textStatus, errorMessage) 
+                    {
+                            //$('p').append('Error' + errorMessage);
+
+                            console.log("Error : " + errorMessage);
+                    }
+            });
+
+        };
+
+
+
+        // update code called every frame
+        AjaxCalling.prototype.update = function(dt) 
+        {
+
+        };
+
+// swap method called for script hot-reloading
+// inherit your script state here
+// AjaxCalling.prototype.swap = function(old) { };
+
+// to learn more about script anatomy, please read:
+// http://developer.playcanvas.com/en/user-manual/scripting/
+    
+        
+    
+    </script>
+		
+</body>
+</html>

@@ -1,0 +1,98 @@
+.row{
+    padding: 0;
+    margin: 0;
+}
+.home-page{
+    width: 100%;
+    height: 100vh;
+    border: 1px solid #000;
+    text-align: center;
+}
+
+.home-page h1{
+    text-transform: uppercase;
+    position: relative;
+    font-weight: bold;
+}
+
+.home-page h1::after{
+    position: absolute;
+    content: '';
+    height: 5px;
+    bottom: -20px;
+    margin: 0 auto;
+    left: 0;
+    right: 0;
+    width: 20%;
+    background: #000;
+}
+
+.home-page h3{
+    display: block;
+}
+
+.title{
+    position: absolute;
+    top:50%;
+    left:50%;
+    transform: translate(-50%,-50%);
+}
+
+.lobby_button {
+    border:1px solid #000 !important;
+    text-transform: uppercase;
+    width: 280px;
+    padding: 8px;
+    margin: 10px;
+    margin-top: 35px;
+    font-weight: 600;
+    font-size: 21px;
+    text-align: center;
+    line-height: 50px;
+    color: #000;
+    transition: all 0.2s ;
+    background: #ffff;
+    /* border:none; */
+
+  }
+  
+  .lobby_button:hover{
+    background-color: #efefef;
+  }
+
+  .intro_page{
+    margin: 90px 0;
+  }
+
+  .intro_page h1{
+    position: relative;
+    text-transform: uppercase;
+}
+
+  .intro_page h1::after{
+    position: absolute;
+    content: '';
+    height: 4px;
+    bottom: -20px;
+    margin: 0 auto;
+    left: 5px;
+    width: 10%;
+    background: #000;
+}
+
+.intro{
+    /* border: 1px solid #000; */
+}
+
+.intro p{
+    font-size: 30px;
+}
+
+.tags{
+   background-color: #f8f8f8;
+}
+
+.icons{
+    width: 120px;
+    height: 120px;
+}

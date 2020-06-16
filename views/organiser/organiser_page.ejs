@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Raleway:100,200,300,400,500,700,800&display=swap"
+        rel="stylesheet">
+        <link rel="stylesheet" href="/stylesheets/organiser_login.css">
+        <link rel="stylesheet" href="/stylesheets/organiser_page.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
+    <script src='https://kit.fontawesome.com/a076d05399.js'></script>
+</head>
+
+<body>
+    <div class="container">
+        <div class="row" style="margin-top: 30px;">
+            <div class="options_box">
+                <button class="logout" onclick="window.location.href = 'organiser_logout'" style="margin-right:20px">Logout</button>
+            </div>
+            <table style="font-weight: 500; font-size: 18px;" class="table table-bordered table-hover table-responsive">
+                <thead>
+                    <tr>
+                        <th>Email</th>
+                        <th>Guest Id</th>
+                        <th>Name</th>
+                        <th>Stream Id</th>
+                        <th>Stream Name</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="all_events">
+
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+    <script>
+        // $(document).ready(function(){
+        //     organiser_by_user_id();
+        // });
+        var buffer;
+        organiser_by_user_id();
+        function organiser_by_user_id() {
+            $.ajax({
+                url: 'organiser_by_user_id',
+                type: 'GET',
+                beforeSend: function () {
+                    console.log("before sending....");
+                },
+                success: function (data) {
+
+                    buffer += `
+                        <tr>
+                        <td>${data.data.email}</td>
+                        <td>${data.data.guest_id}</td>
+                        <td>${data.data.name}</td>
+                        <td>${data.data.stream_id}</td>
+                        <td>${data.data.stream_name}</td>
+                        <td><button class="btn btn-default" onclick="broadcast('${data.data.user_id}')">BroadCast</button></td>
+                        </tr>
+                        `;
+
+                    $('#all_events').append(buffer);
+                    // console.lo
+                    // if(data.status){
+                    //     alert("Good");
+                    // }else{
+                    //     alert("bad")
+                    // }
+
+                }
+            })
+        };
+
+        function broadcast(user_id) {
+            console.log(user_id);
+            window.location.href  = 'broadcast?user_id='+user_id;
+        }
+    </script>
+</body>
+
+</html>

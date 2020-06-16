@@ -1,0 +1,48 @@
+*{
+    box-sizing: border-box;
+    font-family: 'Bodoni MT';
+}
+
+body, html{
+    width: 100%;
+    height: 100%;
+}
+
+.main-screen{
+    background: url('/images/demo_page/main-screen.png') no-repeat;
+    background-size: cover;
+    height: 100vh;
+}
+
+.main-screen button{
+    color: #000;
+    font-size: 18px;
+    border: none;
+    background-color: #fff;
+    width: 210px;
+    height: 55px;
+}
+
+.main-screen button:last-child{
+    color: #000;
+    font-size: 18px;
+    border: none;
+    background-color: #f9c82d;
+    width: 210px;
+    height: 55px;
+}
+
+.section_2{
+    margin: 20px;
+    margin-top: 40px;
+}
+.section_2 p{
+    font-size: 40px;
+    font-weight: bolder;
+}
+
+.icon{
+    text-align: center;
+    border: 1px solid #000; 
+    font-size: 20px;
+}

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guest Login</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Raleway:100,200,300,400,500,700,800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="/stylesheets/style.css">
+    <link rel="stylesheet" href="/stylesheets/login.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
+    <script src='https://kit.fontawesome.com/a076d05399.js'></script>
+</head>
+
+<body>
+    <div class="container">
+        <div class="row" style="margin-top: 30px;">
+            <div class="options_box">
+                <button class="logout" onclick="window.location.href = 'guest_logout'" style="margin-right:20px">Logout</button>
+            </div>
+            <table style="font-weight: 500; font-size: 18px;" class="table table-bordered table-hover table-responsive">
+                <thead>
+                    <tr>
+                        <th>User Name</th>
+                        <th>Email</th>
+                        <th>User ID</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="all_events">
+
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+    <script>
+        // $(document).ready(function(){
+        //     organiser_by_user_id();
+        // });
+        var buffer;
+        organiser_by_user_id();
+        function organiser_by_user_id() {
+            $.ajax({
+                url: 'guest_by_guest_id',
+                type: 'GET',
+                beforeSend: function () {
+                    console.log("before sending....");
+                },
+                success: function (data) {
+                    console.log(data.response);
+                    buffer += `
+                        <tr>
+                        <td>${data.response.username}</td>
+                        <td>${data.response.email}</td>
+                        <td>${data.response.user_id}</td>
+                        <td><a href="${data.response.publish_url}"><button class="btn btn-default">Live Stream</button></a></td>
+                        </tr>
+                        `;
+
+                    $('#all_events').append(buffer);
+                    // console.lo
+                    // if(data.status){
+                    //     alert("Good");
+                    // }else{
+                    //     alert("bad")
+                    // }
+
+                }
+            })
+        };
+
+        // function broadcast(user_id) {
+        //     console.log(user_id);
+        //     window.location.href  = 'broadcast?user_id='+user_id;
+        // }
+    </script>
+</body>
+
+</html>

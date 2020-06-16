@@ -1,0 +1,46 @@
+<!doctype html>
+<html>
+<head>
+    <meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no' />
+    <meta charset='utf-8'>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <link rel="manifest" href="manifest.json">
+    <style></style>
+    <title>Exhibition Hall</title>
+    <script src="playcanvas-stable.min.js"></script>
+    <script src="__settings__.js"></script>
+</head>
+<body>
+    <script src="__modules__.js"></script>
+    <script src="__start__.js"></script>
+    <script src="__loading__.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script>
+        var token = localStorage.getItem('guest_token');
+        if(!token){
+            window.location.href = '/';
+        }else{
+            checkSession();
+        }
+
+        function checkSession(){
+            var body= {
+                token : token
+            }
+
+            $.ajax({
+                url : '/is_active_session',
+                type : 'POST',
+                data: body,
+                success : function(data, status){
+                    if(data.status === 200){
+                        console.log("stay here")
+                    }else{
+                        window.location.href = '/'; 
+                    }
+                }
+            })
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,64 @@
+body{
+    background: #f2f2f2;
+}
+
+#form1 {
+  /* margin-top: 10%; */
+  width: 650px;
+  height: 420px;
+  border: 1px solid #eee;
+  padding: 30px 50px;
+  background: url("/images/circle.png") no-repeat #fff;
+  background-position: right;
+}
+
+label {
+  font-size: medium;
+}
+
+input[type=text], input[type=password] {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  box-sizing: border-box;
+  border: none;
+  border-bottom: 2px solid #cccccc;
+  background: transparent;
+}
+
+
+input[type=text]::placeholder {
+  font-size: medium;
+  font-weight: 520;
+  color: #9a9a9a;
+  text-align: left !important;
+}
+
+input[type=password]::placeholder {
+  font-size: medium;
+  font-weight: 520;
+  color: #9a9a9a;
+}
+
+
+#submitbtn {
+  background-color: #000;
+  border: 1px solid #fff;
+  color: #fff;
+  padding: 10px 32px;
+  font-size: 18px;
+  margin-top: 20px;
+}
+
+@media only screen and (max-width: 413px) {
+  .form_holder {
+    width: 300px;
+    margin: 10px auto;
+  }
+
+  #login_btn {
+    width: 100px;
+    margin-left: 25%;
+  }
+}
+

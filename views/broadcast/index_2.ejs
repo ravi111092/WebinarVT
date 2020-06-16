@@ -1,0 +1,1165 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+
+
+  <script>
+    //Replace this variable with your token
+    const PUBLISH_TOKEN = "51c9264ae049fc2fbb2924e9903faa50d318b38bb94727684d39a35047747237";
+    let url; //Websocket URL path.
+    let jwt; //Authenticated API token.
+    let iceServers;
+    const turnUrl = 'https://turn.millicast.com/webrtc/_turn';
+    var xhr = new XMLHttpRequest();
+
+    xhr.open("POST", "https://director.millicast.com/api/director/publish", true);
+    xhr.setRequestHeader("Authorization", `Bearer ${PUBLISH_TOKEN}`);
+    xhr.setRequestHeader("Content-Type", "application/json");
+
+    xhr.onreadystatechange = function () {
+      if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+        var jsonData = JSON.parse(xhr.responseText);
+        console.log("Call Complete:", JSON.stringify(jsonData, null, 2));
+        url = jsonData.data.urls[0];
+        jwt = jsonData.data.jwt;
+        connect();
+
+      }
+    }
+
+    //Replace "streamName" with the valid name you want to broadcast with.
+    xhr.send(JSON.stringify({ streamName: "nitin" }));
+
+
+
+
+    // Create a peer connection to Millicast with WebRTC
+    function connect() {
+      console.log('connecting');
+      //create Peer connection object, add TURN servers for fallback.
+      let conf = {
+        iceServers: iceServers,
+        rtcpMuxPolicy: "require",
+        bundlePolicy: "max-bundle"
+      };
+      let pc = new RTCPeerConnection(conf);
+      //add media to connection
+      stream.getTracks()
+        .forEach(track => {
+          console.log('audio track: ', track);
+          pc.addTrack(track, stream)
+        });
+
+      //connect with Websockets for handshake to media server.
+      let ws = new WebSocket(url + "?token=" + jwt);
+      ws.onopen = function () {
+        //create a WebRTC offer to send to the media server
+        let offer = pc.createOffer({
+          offerToReceiveAudio: true,
+          offerToReceiveVideo: true
+        }).then(desc => {
+          console.log('createOffer Success!');
+          pc.setLocalDescription(desc)
+            .then(() => {
+              console.log('setLocalDescription Success!');
+            })
+            .catch(e => {
+              console.log('setLocalDescription failed: ', e);
+            })
+        }).catch(e => {
+          console.log('createOffer Failed: ', e)
+        });
+
+      }
+    }
+
+  </script>
+</body>
+
+</html> -->
+
+
+
+
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Ink In Caps</title>
+  <meta charset="utf-8">
+  <meta name="viewport"
+    content="width=device-width initial-scale=1, shrink-to-fit=no, maximum-scale=10.0,user-scalable=1">
+  <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script> -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css"
+    integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous" />
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/emojionearea/3.4.1/emojionearea.min.css" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/emojionearea/3.4.1/emojionearea.min.js"></script>
+  <link href="/stylesheets/agenda_updated_new.css" rel="stylesheet">
+  <!-- <link rel="stylesheet" href="css/style.css" /> -->
+  <!-- <link rel="stylesheet" href="/stylesheets/chat2.css"> -->
+  <style>
+    body {
+      background: #fff;
+      text-align: center;
+      margin: 0px;
+      padding: 0px;
+    }
+
+    body,
+    html,
+    button,
+    input,
+    select,
+    textarea {
+      font-family: Helvetica, Verdana, Arial, sans-serif;
+    }
+
+    #vidView {
+      background: #fff;
+    }
+
+    #form {
+      display: none;
+    }
+
+    .base-input {
+      padding: 5px;
+      font-size: 12px;
+    }
+
+    video {
+      object-fit: cover;
+      height: 550px;
+      width: 100%;
+      display: flex;
+      left: 0;
+      right: 0;
+      margin: auto;
+      margin-top: 30px;
+    }
+
+    .inline-b {
+      display: inline-block;
+    }
+
+    .mt-10 {
+      margin-top: 10px;
+    }
+
+    .ml-10 {
+      margin-left: 10px;
+    }
+
+    .mr-10 {
+      margin-right: 10px;
+    }
+
+    .controls {
+      padding-top: 10px;
+      font-size: 15px;
+    }
+
+    #publishBtn {
+      padding: 20px 31px;
+      text-transform: uppercase;
+      font-size: 18px;
+      border: none;
+      color: #fff;
+      background-color: #000;
+
+    }
+
+    ol li {
+      margin-bottom: 15px;
+    }
+
+    /* Chat Page */
+
+    .chat-container {
+      background: #fff;
+      overflow: hidden;
+      /* position: fixed; */
+      width: 100%;
+    }
+
+    .chat-header {
+      /* display:none !important; */
+      background: #eeffee;
+      color: #fff;
+      border-top-left-radius: 5px;
+      border-top-right-radius: 5px;
+      padding: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    /* .chat-main {
+display: grid;
+grid-template-columns: 1fr 3fr;
+} */
+
+    .chat-sidebar {
+      display: none;
+      background: var(--dark-color-b);
+      color: #fff;
+      padding: 20px 20px 60px;
+      overflow-y: scroll;
+    }
+
+    .chat-sidebar h2 {
+      font-size: 20px;
+      background: rgba(0, 0, 0, 0.1);
+      padding: 10px;
+      margin-bottom: 20px;
+    }
+
+    .chat-sidebar h3 {
+      margin-bottom: 15px;
+    }
+
+    .chat-sidebar ul li {
+      padding: 10px 0;
+    }
+
+    .chat-messages {
+      padding: 30px 30px 30px 30px;
+      height: 100vh;
+      overflow-y: scroll;
+      background: #f8f8f8;
+    }
+
+    .chat-messages .message {
+      padding: 10px;
+      margin-bottom: 15px;
+      background-color: #ebebeb;
+      border-radius: 5px;
+    }
+
+    .chat-messages .message .meta {
+      font-size: 15px;
+      font-weight: bold;
+      color: #000;
+      opacity: 0.7;
+      margin-bottom: 7px;
+    }
+
+    .chat-messages .message .meta span {
+      color: #777;
+    }
+
+    .chat-form-container {
+      padding: 20px 30px;
+      background-color: #bcbcbc;
+    }
+
+    .chat-form-container form {
+      /* display: flex; */
+    }
+
+    .chat-form-container input[type='text'] {
+      font-size: 16px;
+      padding: 5px;
+      height: 40px;
+      flex: 1;
+    }
+
+    /* Join Page */
+    .join-container {
+      max-width: 500px;
+      margin: 80px auto;
+      color: #fff;
+    }
+
+    .join-header {
+      text-align: center;
+      padding: 20px;
+      background: var(--dark-color-a);
+      border-top-left-radius: 5px;
+      border-top-right-radius: 5px;
+    }
+
+    .join-main {
+      padding: 30px 40px;
+      background: var(--dark-color-b);
+    }
+
+    .join-main p {
+      margin-bottom: 20px;
+    }
+
+    .join-main .form-control {
+      margin-bottom: 20px;
+    }
+
+    .join-main label {
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .join-main input[type='text'] {
+      font-size: 16px;
+      padding: 5px;
+      height: 40px;
+      width: 100%;
+    }
+
+    .join-main select {
+      font-size: 16px;
+      padding: 5px;
+      height: 40px;
+      width: 100%;
+    }
+
+    .join-main .btn {
+      margin-top: 20px;
+      width: 100%;
+    }
+
+    /* .emojionearea, .emojionearea.form-control{width:200px !important;display:inline-block;}
+.submitBtn{width:100px;display:inline-block} */
+
+    #chat-form {
+      display: flex;
+    }
+
+    .emojionearea,
+    .emojionearea.form-control {
+      width: 350px;
+      height: 40px !important;
+      border-radius: 10px;
+    }
+
+    .emojionearea .emojionearea-editor {
+      line-height: 24px;
+      font-size: 16px;
+      text-align: left;
+    }
+
+    .submitBtn {
+      width: 100px;
+      height: 40px;
+      margin-top: 0px;
+      margin-left: 10px;
+      border-radius: 10px;
+      font-family: 'Open Sans', sans-serif;
+      background: #fff;
+      color: #777
+    }
+
+    .message {
+      font-size: 15px;
+    }
+
+    .meta {
+      text-align: left;
+      color: #777
+    }
+
+    .text {
+      text-align: left;
+      word-break: break-all;
+      color: #777
+    }
+
+
+    .chatButton {
+      position: fixed;
+      width: 50px;
+      height: 50px;
+      bottom: 10px;
+      right: 10px;
+      cursor: pointer;
+    }
+
+    .history-tl-container {
+      /* font-family: "Roboto",sans-serif; */
+      width: 100%;
+      margin: auto;
+      display: block;
+      position: relative;
+    }
+
+    .history-tl-container ul.tl {
+      margin: 20px 0;
+      padding: 0;
+      display: inline-block;
+
+    }
+
+    .history-tl-container ul.tl li {
+      list-style: none;
+      margin: auto;
+      /* margin-left:100px; */
+      min-height: 50px;
+      /*background: rgba(255,255,0,0.1);*/
+      border-left: 1px dashed rgba(0, 0, 0, 0.5);
+      ;
+      padding: 0 0 50px 30px;
+      position: relative;
+    }
+
+    .history-tl-container ul.tl li:last-child {
+      border-left: 0;
+    }
+
+    .history-tl-container ul.tl li::before {
+      position: absolute;
+      left: -10px;
+      top: 0px;
+      content: " ";
+      border: 8px solid rgba(0, 0, 0, 0.5);
+      border-radius: 500%;
+      background: #fff;
+      height: 20px;
+      width: 20px;
+      transition: all 500ms ease-in-out;
+
+    }
+
+    .history-tl-container ul.tl li:hover::before {
+      border-color: #258CC7;
+      transition: all 1000ms ease-in-out;
+    }
+
+    ul.tl li .item-title {
+      text-align: left
+    }
+
+    ul.tl li .item-detail {
+      color: rgba(0, 0, 0, 0.5);
+      font-size: 12px;
+      text-align: left
+    }
+
+    ul.tl li .timestamp {
+      color: #8D8D8D;
+      position: absolute;
+      width: 100px;
+      left: -35%;
+      text-align: right;
+      font-size: 12px;
+    }
+
+    .speaker_tab {
+      text-align: left;
+      font-weight: 900;
+      margin-left: 50px;
+    }
+
+    .displayer {
+      display: flex;
+      padding: 10px;
+    }
+
+    .labeler {
+      margin-top: 5px;
+      margin-right: 10px;
+    }
+  </style>
+
+</head>
+
+<body>
+
+  <!-- Standard shim for WebRTC browser compatibility -->
+  <script src="/javascripts/adapter.min.js"></script>
+
+
+
+  <!-- <div class="controls">
+    <div id="form" class="">
+      <input id="tokenTxt" class="base-input" type="hidden" value="2d6b1c0aebbc31bbb1855cbe29a08319e2127fa3e5af48b026789f9bae6b7bc0" placeholder="Token" />
+      <input id="streamTxt" class="base-input ml-10 mr-10" type="hidden" value="" placeholder="Stream Name" />
+      <input id="viewTxt" class="base-input" type="hidden" value="RfTsfz" placeholder="Account Id" />
+    </div>
+    <div class="ml-10 mt-10">
+      <button id="publishBtn" class="inline-b">Publish Green</button>
+    </div>
+
+  </div> -->
+
+
+  <div class="col-lg-12" style="padding: 0; ">
+
+    <div class="col-lg-2" style="background-color: #f8f8f8; height: 100vh;">
+      <div>
+        <img src="\images\chat_logo.jpg" width="100%">
+      </div>
+      <div>
+        <div id="agenda">
+          <div class="timeline-wrapper" style="padding-left: 50px; padding-top: 40px;">
+            <div class="history-tl-container text-center">
+              <ul class="tl">
+                <li class="tl-item" ng-repeat="item in retailer_history">
+
+                  <div class="item-title">Start from Shire tart from Shiretart from Shiretart from
+                    Shiretart from
+                    Shire</div>
+                  <div class="item-detail">Don't forget the ring</div>
+                </li>
+                <li class="tl-item" ng-repeat="item in retailer_history">
+
+                  <div class="item-title">Kill some Orcs</div>
+                  <div class="item-detail">Don't enter the caves!!</div>
+                </li>
+                <li class="tl-item" ng-repeat="item in retailer_history">
+
+                  <div class="item-title">Throw that goddamn ring in the lava</div>
+                  <div class="item-detail">Also, throw that Gollum too</div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div style="text-align:left; margin-left: 40px;">
+          <h2>Speakers</h2>
+          <ol>
+            <li>John Doe(Keynote)</li>
+            <li>John Doe(Keynote)</li>
+            <li>Jane Doe(Keynote)</li>
+          </ol>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="col-lg-6 col-md-offset-2">
+      <div id="vidView">
+        <video muted autoplay loop playsinline src="/video/green.mp4" id="localVideo"></video>
+      </div>
+
+      <div class="controls">
+
+        <!-- <div id="form" class="">
+          <input id="tokenTxt" class="base-input" type="hidden"
+            value="2d6b1c0aebbc31bbb1855cbe29a08319e2127fa3e5af48b026789f9bae6b7bc0" placeholder="Token" />
+          <input id="streamTxt" class="base-input ml-10 mr-10" type="hidden" value="" placeholder="Stream Name" />
+          <input id="viewTxt" class="base-input" type="hidden" value="RfTsfz" placeholder="Account Id" />
+        </div> -->
+
+        <div class="div-section">
+          <div>
+            <input type="hidden" id="userAgent" name="userAgent" value="" />
+            <div class="displayer">
+              <div class="labeler"><strong>Stream Name</strong></div>
+              <div><input type="text" id="streamName" size="25" class="form-control" value="<%= stream_name_2 %>" disabled /></div>
+            </div>
+            <div class="displayer">
+              <div class="labeler"><strong>Video Bitrate</strong></div>
+              <div><input type="text" id="videoBitrate" size="10" class="form-control" value="" /></div>
+              <div style="margin:7px;">kbps</div>
+            </div>
+            <div class="displayer">
+              <div class="labeler"><strong>Audio Bitrate</strong></div>
+              <div><input type="text" id="audioBitrate" size="10" class="form-control" value="" /></div>
+              <div style="margin:7px;">kbps</div>
+            </div>
+
+            
+              <div class="displayer"><input type="button" class="btn btn-default"  style="background:#000;color:#fff;text-transform: uppercase;" id="buttonGo" onclick="start()" value="" /></div>
+          
+          </div>
+        </div>
+
+
+
+        <div>
+          <!-- <button id="publishBtn" class="inline-b" style="float: left;">Go live</button>
+          <button id="publishBtn" class="inline-b" style="float: right;" onclick="location.reload()">Stop
+            Streaming</button>
+          <div style="clear: both;"></div> -->
+
+
+
+        </div>
+
+      </div>
+    </div>
+
+    <div class="col-lg-3" style="padding: 0;">
+
+    </div>
+
+  </div>
+
+
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qs/6.9.2/qs.min.js"
+    integrity="sha256-TDxXjkAUay70ae/QJBEpGKkpVslXaHHayklIVglFRT4=" crossorigin="anonymous"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <!-- <script src="/javascripts/chat2.js"></script> -->
+  <script src="/javascripts/adapter.min.js"></script>
+  <script>  // showing emojis in input field
+    $("#msg").emojioneArea({
+      pickerPosition: "top"
+    });</script>
+  <!-- live chat end -->
+
+
+
+  <script>
+
+
+
+
+    const GO_BUTTON_START = "Publish";
+    const GO_BUTTON_STOP = "Stop";
+
+    var localVideo = null;
+    var remoteVideo = null;
+    var peerConnection = null;
+    var peerConnectionConfig = { 'iceServers': [] };
+    var localStream = null;
+    var wsURL = "wss://5eba300cb5631.streamlock.net/webrtc-session.json";
+    var wsConnection = null;
+    var streamInfo = { applicationName: "webrtc", streamName: "<%= stream_name_2 %>", sessionId: "[empty]" };
+    var userData = { param1: "value1" };
+    var videoBitrate = 360;
+    var audioBitrate = 64;
+    var videoFrameRate = "29.97";
+    var videoChoice = "42e01f";
+    var audioChoice = "opus";
+    var videoIndex = -1;
+    var audioIndex = -1;
+    var userAgent = null;
+    var newAPI = false;
+    var SDPOutput = new Object();
+
+    navigator.getUserMedia = navigator.getUserMedia || navigator.mozGetUserMedia || navigator.webkitGetUserMedia;
+    window.RTCPeerConnection = window.RTCPeerConnection || window.mozRTCPeerConnection || window.webkitRTCPeerConnection;
+    window.RTCIceCandidate = window.RTCIceCandidate || window.mozRTCIceCandidate || window.webkitRTCIceCandidate;
+    window.RTCSessionDescription = window.RTCSessionDescription || window.mozRTCSessionDescription || window.webkitRTCSessionDescription;
+
+    function pageReady() {
+      streamInfo.streamName = $('#streamName').val();
+
+      console.log('WSURL: ' + wsURL);
+
+      console.log('ApplicationName: ' + streamInfo.applicationName);
+
+      console.log('StreamName: ' + streamInfo.streamName);
+
+      console.log('VideoBitrate: ' + videoBitrate);
+
+      console.log('AudioBitrate: ' + audioBitrate);
+
+      console.log('VideoFrameRate: ' + videoFrameRate);
+
+      console.log('VideoChoice: ' + videoChoice);
+
+      console.log('AudioChoice: ' + audioChoice);
+
+
+      $('#videoBitrate').val(videoBitrate);
+      $('#audioBitrate').val(audioBitrate);
+
+      userAgent = $('#userAgent').val().toLowerCase();
+
+      if (userAgent == null) {
+        userAgent = "unknown";
+      }
+
+      $("#buttonGo").attr('value', GO_BUTTON_START);
+
+      localVideo = document.getElementById('localVideo');
+
+      /*
+        // firefox
+        video: {
+          width: { min: 1280, ideal: 1280, max: 1920 },
+          height: { min: 720, ideal: 720, max: 1080 }
+          },
+    
+        // chrome
+        video: {
+          mandatory: {
+            minWidth: 1280,
+            maxWidth: 1280,
+            minHeight: 720,
+            maxHeight: 720,
+            minFrameRate: 30,
+            maxFrameRate: 30
+          }
+        },
+    
+        video: {
+          mandatory: {
+            minAspectRatio: 1.7777777778
+          }
+        },
+    
+        video: true,
+      */
+
+      var constraints =
+      {
+        video: true,
+        audio: false,
+      };
+
+      // if(navigator.mediaDevices.getUserMedia)
+      // {
+      // 	navigator.mediaDevices.getUserMedia(constraints).then(getUserMediaSuccess).catch(errorHandler);
+      // 	newAPI = false;
+      // }
+      // else if (navigator.getUserMedia)
+      // {
+      //     navigator.getUserMedia(constraints, getUserMediaSuccess, errorHandler);
+      // }
+      // else
+      // {
+      //     alert('Your browser does not support getUserMedia API');
+      // }
+
+      console.log("newAPI: " + newAPI);
+
+    }
+
+    document.getElementById("userAgent").value = navigator.userAgent;
+    pageReady();
+
+    function wsConnect(url) {
+      wsConnection = new WebSocket(url);
+      wsConnection.binaryType = 'arraybuffer';
+
+      wsConnection.onopen = function () {
+        console.log("wsConnection.onopen");
+
+        peerConnection = new RTCPeerConnection(peerConnectionConfig);
+        peerConnection.onicecandidate = gotIceCandidate;
+
+        if (newAPI) {
+          var stream = document.getElementById("localVideo").captureStream();
+          var localTracks = stream.getTracks();
+
+
+
+          // var localTracks = localStream.getTracks();
+          for (localTrack in localTracks) {
+            // peerConnection.addTrack(localTracks[localTrack], localStream);
+            peerConnection.addTrack(localTracks[localTrack], stream);
+
+          }
+        }
+        else {
+          var stream = document.getElementById("localVideo").captureStream();
+          peerConnection.addStream(stream);
+          // peerConnection.addStream(localStream);
+        }
+
+        peerConnection.createOffer(gotDescription, errorHandler);
+
+
+      }
+
+      //var offerOptions = {
+      // New spec states offerToReceiveAudio/Video are of type long (due to
+      // having to tell how many "m" lines to generate).
+      // http://w3c.github.io/webrtc-pc/#idl-def-RTCOfferAnswerOptions.
+      //  offerToReceiveAudio: 1,
+      // offerToReceiveVideo: 1,
+      //	codecPayloadType: 0x42E01F,
+      // };
+
+      wsConnection.onmessage = function (evt) {
+        console.log("wsConnection.onmessage: " + evt.data);
+
+        var msgJSON = JSON.parse(evt.data);
+
+        var msgStatus = Number(msgJSON['status']);
+        var msgCommand = msgJSON['command'];
+
+        if (msgStatus != 200) {
+          $("#sdpDataTag").html(msgJSON['statusDescription']);
+          stopPublisher();
+        }
+        else {
+          $("#sdpDataTag").html("");
+
+          var sdpData = msgJSON['sdp'];
+          if (sdpData !== undefined) {
+            console.log('sdp: ' + msgJSON['sdp']);
+
+            peerConnection.setRemoteDescription(new RTCSessionDescription(sdpData), function () {
+              //peerConnection.createAnswer(gotDescription, errorHandler);
+            }, errorHandler);
+          }
+
+          var iceCandidates = msgJSON['iceCandidates'];
+          if (iceCandidates !== undefined) {
+            for (var index in iceCandidates) {
+              console.log('iceCandidates: ' + iceCandidates[index]);
+
+              peerConnection.addIceCandidate(new RTCIceCandidate(iceCandidates[index]));
+            }
+          }
+        }
+
+        if (wsConnection != null)
+          wsConnection.close();
+        wsConnection = null;
+      }
+
+      wsConnection.onclose = function () {
+        console.log("wsConnection.onclose");
+      }
+
+      wsConnection.onerror = function (evt) {
+        console.log("wsConnection.onerror: " + JSON.stringify(evt));
+
+        $("#sdpDataTag").html('WebSocket connection failed: ' + wsURL);
+        stopPublisher();
+      }
+    }
+
+    function getUserMediaSuccess(stream) {
+      console.log("getUserMediaSuccess: " + stream);
+      localStream = stream;
+      try {
+        localVideo.srcObject = stream;
+      } catch (error) {
+        localVideo.src = window.URL.createObjectURL(stream);
+      }
+    }
+
+    function startPublisher() {
+      videoBitrate = $('#videoBitrate').val();
+      audioBitrate = $('#audioBitrate').val();
+      userAgent = $('#userAgent').val().toLowerCase();
+
+      console.log("startPublisher: wsURL:" + wsURL + " streamInfo:" + JSON.stringify(streamInfo));
+
+      wsConnect(wsURL);
+
+      $("#buttonGo").attr('value', GO_BUTTON_STOP);
+    }
+
+    function stopPublisher() {
+      if (peerConnection != null)
+        peerConnection.close();
+      peerConnection = null;
+
+      if (wsConnection != null)
+        wsConnection.close();
+      wsConnection = null;
+
+      $("#buttonGo").attr('value', GO_BUTTON_START);
+
+      console.log("stopPublisher");
+    }
+
+    function start() {
+      if (peerConnection == null)
+        startPublisher();
+      else
+        stopPublisher();
+    }
+
+    function gotIceCandidate(event) {
+      if (event.candidate != null) {
+        console.log('gotIceCandidate: ' + JSON.stringify({ 'ice': event.candidate }));
+      }
+    }
+
+    function gotDescription(description) {
+      var enhanceData = new Object();
+
+      if (audioBitrate !== undefined)
+        enhanceData.audioBitrate = Number(audioBitrate);
+      if (videoBitrate !== undefined)
+        enhanceData.videoBitrate = Number(videoBitrate);
+      if (videoFrameRate !== undefined)
+        enhanceData.videoFrameRate = Number(videoFrameRate);
+
+
+      description.sdp = enhanceSDP(description.sdp, enhanceData);
+
+      console.log('gotDescription: ' + JSON.stringify({ 'sdp': description }));
+
+      peerConnection.setLocalDescription(description, function () {
+
+        wsConnection.send('{"direction":"publish", "command":"sendOffer", "streamInfo":' + JSON.stringify(streamInfo) + ', "sdp":' + JSON.stringify(description) + ', "userData":' + JSON.stringify(userData) + '}');
+
+      }, function () { console.log('set description error') });
+    }
+
+    function addAudio(sdpStr, audioLine) {
+      var sdpLines = sdpStr.split(/\r\n/);
+      var sdpSection = 'header';
+      var hitMID = false;
+      var sdpStrRet = '';
+      var done = false;
+
+      for (var sdpIndex in sdpLines) {
+        var sdpLine = sdpLines[sdpIndex];
+
+        if (sdpLine.length <= 0)
+          continue;
+
+
+        sdpStrRet += sdpLine;
+        sdpStrRet += '\r\n';
+
+        if ('a=rtcp-mux'.localeCompare(sdpLine) == 0 && done == false) {
+          sdpStrRet += audioLine;
+          done = true;
+        }
+
+
+      }
+      return sdpStrRet;
+    }
+
+    function addVideo(sdpStr, videoLine) {
+      var sdpLines = sdpStr.split(/\r\n/);
+      var sdpSection = 'header';
+      var hitMID = false;
+      var sdpStrRet = '';
+      var done = false;
+
+      var rtcpSize = false;
+      var rtcpMux = false;
+
+      for (var sdpIndex in sdpLines) {
+        var sdpLine = sdpLines[sdpIndex];
+
+        if (sdpLine.length <= 0)
+          continue;
+
+        if (sdpLine.includes("a=rtcp-rsize")) {
+          rtcpSize = true;
+        }
+
+        if (sdpLine.includes("a=rtcp-mux")) {
+          rtcpMux = true;
+        }
+
+      }
+
+      for (var sdpIndex in sdpLines) {
+        var sdpLine = sdpLines[sdpIndex];
+
+        sdpStrRet += sdpLine;
+        sdpStrRet += '\r\n';
+
+        if (('a=rtcp-rsize'.localeCompare(sdpLine) == 0) && done == false && rtcpSize == true) {
+          sdpStrRet += videoLine;
+          done = true;
+        }
+
+        if ('a=rtcp-mux'.localeCompare(sdpLine) == 0 && done == true && rtcpSize == false) {
+          sdpStrRet += videoLine;
+          done = true;
+        }
+
+        if ('a=rtcp-mux'.localeCompare(sdpLine) == 0 && done == false && rtcpSize == false) {
+          done = true;
+        }
+
+      }
+      return sdpStrRet;
+    }
+
+    function enhanceSDP(sdpStr, enhanceData) {
+      var sdpLines = sdpStr.split(/\r\n/);
+      var sdpSection = 'header';
+      var hitMID = false;
+      var sdpStrRet = '';
+
+      //console.log("Original SDP: "+sdpStr);
+
+      // Firefox provides a reasonable SDP, Chrome is just odd
+      // so we have to doing a little mundging to make it all work
+      if (!sdpStr.includes("THIS_IS_SDPARTA") || videoChoice.includes("VP9")) {
+        for (var sdpIndex in sdpLines) {
+          var sdpLine = sdpLines[sdpIndex];
+
+          if (sdpLine.length <= 0)
+            continue;
+
+          var doneCheck = checkLine(sdpLine);
+          if (!doneCheck)
+            continue;
+
+          sdpStrRet += sdpLine;
+          sdpStrRet += '\r\n';
+
+        }
+        sdpStrRet = addAudio(sdpStrRet, deliverCheckLine(audioChoice, "audio"));
+        sdpStrRet = addVideo(sdpStrRet, deliverCheckLine(videoChoice, "video"));
+        sdpStr = sdpStrRet;
+        sdpLines = sdpStr.split(/\r\n/);
+        sdpStrRet = '';
+      }
+
+      for (var sdpIndex in sdpLines) {
+        var sdpLine = sdpLines[sdpIndex];
+
+        if (sdpLine.length <= 0)
+          continue;
+
+        if (sdpLine.indexOf("m=audio") == 0 && audioIndex != -1) {
+          audioMLines = sdpLine.split(" ");
+          sdpStrRet += audioMLines[0] + " " + audioMLines[1] + " " + audioMLines[2] + " " + audioIndex + "\r\n";
+          continue;
+        }
+
+        if (sdpLine.indexOf("m=video") == 0 && videoIndex != -1) {
+          audioMLines = sdpLine.split(" ");
+          sdpStrRet += audioMLines[0] + " " + audioMLines[1] + " " + audioMLines[2] + " " + videoIndex + "\r\n";
+          continue;
+        }
+
+        sdpStrRet += sdpLine;
+
+        if (sdpLine.indexOf("m=audio") === 0) {
+          sdpSection = 'audio';
+          hitMID = false;
+        }
+        else if (sdpLine.indexOf("m=video") === 0) {
+          sdpSection = 'video';
+          hitMID = false;
+        }
+        else if (sdpLine.indexOf("a=rtpmap") == 0) {
+          sdpSection = 'bandwidth';
+          hitMID = false;
+        }
+
+        if (sdpLine.indexOf("a=mid:") === 0 || sdpLine.indexOf("a=rtpmap") == 0) {
+          if (!hitMID) {
+            if ('audio'.localeCompare(sdpSection) == 0) {
+              if (enhanceData.audioBitrate !== undefined) {
+                sdpStrRet += '\r\nb=CT:' + (enhanceData.audioBitrate);
+                sdpStrRet += '\r\nb=AS:' + (enhanceData.audioBitrate);
+              }
+              hitMID = true;
+            }
+            else if ('video'.localeCompare(sdpSection) == 0) {
+              if (enhanceData.videoBitrate !== undefined) {
+                sdpStrRet += '\r\nb=CT:' + (enhanceData.videoBitrate);
+                sdpStrRet += '\r\nb=AS:' + (enhanceData.videoBitrate);
+                if (enhanceData.videoFrameRate !== undefined) {
+                  sdpStrRet += '\r\na=framerate:' + enhanceData.videoFrameRate;
+                }
+              }
+              hitMID = true;
+            }
+            else if ('bandwidth'.localeCompare(sdpSection) == 0) {
+              var rtpmapID;
+              rtpmapID = getrtpMapID(sdpLine);
+              if (rtpmapID !== null) {
+                var match = rtpmapID[2].toLowerCase();
+                if (('vp9'.localeCompare(match) == 0) || ('vp8'.localeCompare(match) == 0) || ('h264'.localeCompare(match) == 0) ||
+                  ('red'.localeCompare(match) == 0) || ('ulpfec'.localeCompare(match) == 0) || ('rtx'.localeCompare(match) == 0)) {
+                  if (enhanceData.videoBitrate !== undefined) {
+                    sdpStrRet += '\r\na=fmtp:' + rtpmapID[1] + ' x-google-min-bitrate=' + (enhanceData.videoBitrate) + ';x-google-max-bitrate=' + (enhanceData.videoBitrate);
+                  }
+                }
+
+                if (('opus'.localeCompare(match) == 0) || ('isac'.localeCompare(match) == 0) || ('g722'.localeCompare(match) == 0) || ('pcmu'.localeCompare(match) == 0) ||
+                  ('pcma'.localeCompare(match) == 0) || ('cn'.localeCompare(match) == 0)) {
+                  if (enhanceData.audioBitrate !== undefined) {
+                    sdpStrRet += '\r\na=fmtp:' + rtpmapID[1] + ' x-google-min-bitrate=' + (enhanceData.audioBitrate) + ';x-google-max-bitrate=' + (enhanceData.audioBitrate);
+                  }
+                }
+              }
+            }
+          }
+        }
+        sdpStrRet += '\r\n';
+      }
+      console.log("Resuling SDP: " + sdpStrRet);
+      return sdpStrRet;
+    }
+
+    function deliverCheckLine(profile, type) {
+      var outputString = "";
+      for (var line in SDPOutput) {
+        var lineInUse = SDPOutput[line];
+        outputString += line;
+        if (lineInUse.includes(profile)) {
+          if (profile.includes("VP9") || profile.includes("VP8")) {
+            var output = "";
+            var outputs = lineInUse.split(/\r\n/);
+            for (var position in outputs) {
+              var transport = outputs[position];
+              if (transport.indexOf("transport-cc") !== -1 || transport.indexOf("goog-remb") !== -1 || transport.indexOf("nack") !== -1) {
+                continue;
+              }
+              output += transport;
+              output += "\r\n";
+            }
+
+            if (type.includes("audio")) {
+              audioIndex = line;
+            }
+
+            if (type.includes("video")) {
+              videoIndex = line;
+            }
+
+            return output;
+          }
+          if (type.includes("audio")) {
+            audioIndex = line;
+          }
+
+          if (type.includes("video")) {
+            videoIndex = line;
+          }
+          return lineInUse;
+        }
+      }
+      return outputString;
+    }
+
+    function checkLine(line) {
+      if (line.startsWith("a=rtpmap") || line.startsWith("a=rtcp-fb") || line.startsWith("a=fmtp")) {
+        var res = line.split(":");
+
+        if (res.length > 1) {
+          var number = res[1].split(" ");
+          if (!isNaN(number[0])) {
+            if (!number[1].startsWith("http") && !number[1].startsWith("ur")) {
+              var currentString = SDPOutput[number[0]];
+              if (!currentString) {
+                currentString = "";
+              }
+              currentString += line + "\r\n";
+              SDPOutput[number[0]] = currentString;
+              return false;
+            }
+          }
+        }
+      }
+
+      return true;
+    }
+
+    function getrtpMapID(line) {
+      var findid = new RegExp('a=rtpmap:(\\d+) (\\w+)/(\\d+)');
+      var found = line.match(findid);
+      return (found && found.length >= 3) ? found : null;
+    }
+
+    function errorHandler(error) {
+      console.log(error);
+    }
+
+  </script>
+
+</body>
+
+</html>
